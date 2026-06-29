@@ -132,10 +132,10 @@ FlowbornPosterTool/
 
 ## ⚠️ Lưu ý
 
-- Tool chỉ sử dụng được **1 lần**. Liên hệ **hienmods** để mua thêm.
+- Tool chỉ sử dụng được **1 lần**.
 - **Không** chia sẻ file HAR cho người khác (chứa thông tin đăng nhập).
 - Mở game sau khi tool chạy xong để xem poster mới.
 
 ---
 
-**© 2025 hienmods** — All rights reserved.
+**© 2026 hienmods** — All rights reserved.

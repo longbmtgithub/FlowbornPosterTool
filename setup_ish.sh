@@ -15,9 +15,13 @@ echo ""
 echo ">>> Cap nhat package..."
 apk update 2>/dev/null
 
-# Install Python3 + Pillow (pre-compiled, KHONG can build)
-echo ">>> Cai dat Python3 + Pillow (pre-built)..."
+# Install Python3 + packages (pre-compiled, KHONG can build)
+echo ">>> Cai dat Python3 + packages..."
 apk add python3 py3-pip py3-pillow py3-requests 2>/dev/null
+
+# Install js2py for Python sign bridge (khong can Node.js!)
+echo ">>> Cai dat js2py (Python sign bridge)..."
+pip3 install --break-system-packages js2py 2>/dev/null || pip3 install js2py 2>/dev/null
 
 if command -v python3 >/dev/null 2>&1; then
     echo "[OK] Python3: $(python3 --version 2>&1)"

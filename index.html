@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowborn License Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0f;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+.container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 40px 0 30px;
+}
+.header h1 {
+  font-size: 28px;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.header p { color: #666; font-size: 14px; }
+
+/* Login */
+#login-section {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px;
+  background: #12121a;
+  border-radius: 16px;
+  border: 1px solid #1e1e2e;
+}
+#login-section h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #00f5a0;
+}
+#login-section p {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+#login-section a { color: #00d9f5; text-decoration: none; }
+
+/* Inputs */
+input, select {
+  width: 100%;
+  padding: 12px 16px;
+  background: #0a0a0f;
+  border: 1px solid #2a2a3a;
+  border-radius: 10px;
+  color: #e0e0e0;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border 0.2s;
+}
+input:focus { border-color: #00f5a0; }
+input::placeholder { color: #444; }
+
+/* Buttons */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  color: #0a0a0f;
+  width: 100%;
+  margin-top: 15px;
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-add {
+  background: #1a3a2a;
+  color: #00f5a0;
+  border: 1px solid #00f5a033;
+}
+.btn-add:hover { background: #1a4a30; }
+.btn-free {
+  background: #1a2a3a;
+  color: #00d9f5;
+  border: 1px solid #00d9f533;
+}
+.btn-free:hover { background: #1a3a4a; }
+.btn-del {
+  background: #3a1a1a;
+  color: #f55;
+  border: 1px solid #f5555533;
+  padding: 6px 14px;
+  font-size: 12px;
+}
+.btn-del:hover { background: #4a1a1a; }
+.btn-logout {
+  background: transparent;
+  color: #666;
+  border: 1px solid #333;
+  padding: 8px 16px;
+  font-size: 12px;
+}
+
+/* Actions bar */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+/* Table */
+.license-table {
+  width: 100%;
+  background: #12121a;
+  border-radius: 16px;
+  border: 1px solid #1e1e2e;
+  overflow: hidden;
+}
+.license-table table { width: 100%; border-collapse: collapse; }
+.license-table th {
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #666;
+  border-bottom: 1px solid #1e1e2e;
+  font-weight: 600;
+}
+.license-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid #1e1e2e08;
+}
+.license-table tr:last-child td { border-bottom: none; }
+.license-table tr:hover td { background: #1a1a2a; }
+
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.tag-free { background: #00f5a020; color: #00f5a0; }
+.tag-active { background: #00d9f520; color: #00d9f5; }
+.tag-expired { background: #f5555520; color: #f55; }
+
+.device-id {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: #12121a;
+  border: 1px solid #2a2a3a;
+  border-radius: 16px;
+  padding: 30px;
+  width: 90%;
+  max-width: 420px;
+}
+.modal h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #00f5a0;
+}
+.form-group { margin-bottom: 15px; }
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.modal-actions .btn { flex: 1; }
+.btn-cancel {
+  background: #1e1e2e;
+  color: #888;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 200;
+  transition: transform 0.3s ease;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast-ok { background: #1a3a2a; color: #00f5a0; border: 1px solid #00f5a033; }
+.toast-err { background: #3a1a1a; color: #f55; border: 1px solid #f5555533; }
+
+/* Empty */
+.empty {
+  text-align: center;
+  padding: 40px;
+  color: #444;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  flex: 1;
+  background: #12121a;
+  border: 1px solid #1e1e2e;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.stat-card .num {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-card .label { font-size: 11px; color: #666; margin-top: 4px; }
+
+@media (max-width: 600px) {
+  .container { padding: 10px; }
+  .header { padding: 20px 0; }
+  .header h1 { font-size: 22px; }
+  .stats { flex-direction: column; }
+  .license-table { font-size: 13px; }
+  .license-table th, .license-table td { padding: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>⚡ Flowborn License Manager</h1>
+    <p>Quan ly license Flowborn Poster Tool</p>
+  </div>
+
+  <!-- Login -->
+  <div id="login-section">
+    <h2>🔑 Dang nhap</h2>
+    <p>Can GitHub token co quyen <b>gist</b>.<br>
+    <a href="https://github.com/settings/tokens/new" target="_blank">Tao token tai day →</a></p>
+    <input type="password" id="token-input" placeholder="ghp_xxxxx...">
+    <button class="btn btn-primary" onclick="doLogin()">Dang nhap</button>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" style="display:none">
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num" id="stat-total">0</div>
+        <div class="label">TONG LICENSE</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-active">0</div>
+        <div class="label">DANG HOAT DONG</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-free">0</div>
+        <div class="label">FREE KEY</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-add" onclick="showAddModal()">+ Them license</button>
+      <button class="btn btn-free" onclick="showFreeModal()">🎁 Free key</button>
+      <button class="btn btn-logout" onclick="doLogout()" style="margin-left:auto">Dang xuat</button>
+    </div>
+
+    <div class="license-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Device ID</th>
+            <th>Luot</th>
+            <th>Het han</th>
+            <th>Trang thai</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="license-body"></tbody>
+      </table>
+      <div class="empty" id="empty-msg" style="display:none">Chua co license nao</div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <h3>Them License</h3>
+    <div class="form-group">
+      <label>Device ID</label>
+      <input id="add-did" placeholder="Paste device ID tu khach hang">
+    </div>
+    <div class="form-group">
+      <label>So luot su dung</label>
+      <input id="add-max" type="number" value="5" min="1">
+    </div>
+    <div class="form-group">
+      <label>Het han (de trong = khong gioi han)</label>
+      <input id="add-exp" type="date">
+    </div>
+    <div class="form-group">
+      <label>Ghi chu</label>
+      <input id="add-name" placeholder="Ten khach hang">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeModals()">Huy</button>
+      <button class="btn btn-primary" onclick="addLicense()" style="margin-top:0">Them</button>
+    </div>
+  </div>
+</div>
+
+<!-- Free Modal -->
+<div class="modal-overlay" id="free-modal">
+  <div class="modal">
+    <h3>🎁 Tao Free Key</h3>
+    <div class="form-group">
+      <label>So luot su dung</label>
+      <input id="free-max" type="number" value="999" min="1">
+    </div>
+    <div class="form-group">
+      <label>Het han</label>
+      <input id="free-exp" type="date">
+    </div>
+    <div class="form-group">
+      <label>Ghi chu</label>
+      <input id="free-name" value="FREE trial">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeModals()">Huy</button>
+      <button class="btn btn-primary" onclick="addFreeKey()" style="margin-top:0">Tao</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GIST_ID = 'a104c4c7c27608d9420e7ce94578b56c';
+let TOKEN = '';
+let DATA = {};
+
+function toast(msg, ok = true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (ok ? 'toast-ok' : 'toast-err');
+  setTimeout(() => t.className = 'toast', 2500);
+}
+
+async function fetchLicenses() {
+  const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+    headers: { 'Authorization': `token ${TOKEN}` }
+  });
+  if (!r.ok) throw new Error('API error: ' + r.status);
+  const g = await r.json();
+  DATA = JSON.parse(g.files['licenses.json'].content);
+  renderLicenses();
+}
+
+async function saveLicenses() {
+  const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `token ${TOKEN}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      files: { 'licenses.json': { content: JSON.stringify(DATA, null, 2) } }
+    })
+  });
+  return r.ok;
+}
+
+function getStatus(info) {
+  if (!info) return { text: '?', cls: 'tag-active' };
+  const exp = typeof info === 'object' ? info.expires : '';
+  if (exp) {
+    const d = new Date(exp + 'T23:59:59');
+    if (new Date() > d) return { text: 'Het han', cls: 'tag-expired' };
+  }
+  return { text: 'Active', cls: 'tag-active' };
+}
+
+function renderLicenses() {
+  const licenses = DATA.licenses || {};
+  const keys = Object.keys(licenses);
+  const body = document.getElementById('license-body');
+  const empty = document.getElementById('empty-msg');
+
+  let total = keys.length, active = 0, free = 0;
+  keys.forEach(k => {
+    const s = getStatus(licenses[k]);
+    if (s.text === 'Active') active++;
+    if (k === '*') free = 1;
+  });
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-free').textContent = free ? 'Co' : 'Khong';
+
+  if (!keys.length) {
+    body.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  body.innerHTML = keys.map(did => {
+    const info = licenses[did];
+    const isObj = typeof info === 'object';
+    const max = isObj ? (info.max || 1) : info;
+    const exp = isObj ? (info.expires || '-') : '-';
+    const name = isObj ? (info.name || '') : '';
+    const st = getStatus(info);
+    const label = did === '*' ? '<span class="tag tag-free">FREE</span>' :
+      `<span class="device-id">${did}</span>`;
+
+    return `<tr>
+      <td>${label}<br><small style="color:#555">${name}</small></td>
+      <td>${max}</td>
+      <td>${exp}</td>
+      <td><span class="tag ${st.cls}">${st.text}</span></td>
+      <td><button class="btn btn-del" onclick="delLicense('${did}')">Xoa</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function doLogin() {
+  TOKEN = document.getElementById('token-input').value.trim();
+  if (!TOKEN) return;
+  try {
+    await fetchLicenses();
+    localStorage.setItem('fp_token', TOKEN);
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    toast('Dang nhap thanh cong!');
+  } catch (e) {
+    toast('Token khong hop le!', false);
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem('fp_token');
+  TOKEN = '';
+  document.getElementById('login-section').style.display = 'block';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('token-input').value = '';
+}
+
+function showAddModal() { document.getElementById('add-modal').classList.add('active'); }
+function showFreeModal() { document.getElementById('free-modal').classList.add('active'); }
+function closeModals() {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+}
+
+async function addLicense() {
+  const did = document.getElementById('add-did').value.trim();
+  if (!did) return toast('Nhap Device ID!', false);
+  const entry = { max: parseInt(document.getElementById('add-max').value) || 5 };
+  const exp = document.getElementById('add-exp').value;
+  const name = document.getElementById('add-name').value.trim();
+  if (exp) entry.expires = exp;
+  if (name) entry.name = name;
+  if (!DATA.licenses) DATA.licenses = {};
+  DATA.licenses[did] = entry;
+  if (await saveLicenses()) {
+    toast('Da them license!');
+    renderLicenses();
+    closeModals();
+    document.getElementById('add-did').value = '';
+    document.getElementById('add-name').value = '';
+  } else toast('Loi luu!', false);
+}
+
+async function addFreeKey() {
+  const entry = { max: parseInt(document.getElementById('free-max').value) || 999 };
+  const exp = document.getElementById('free-exp').value;
+  const name = document.getElementById('free-name').value.trim() || 'FREE trial';
+  if (exp) entry.expires = exp;
+  entry.name = name;
+  if (!DATA.licenses) DATA.licenses = {};
+  DATA.licenses['*'] = entry;
+  if (await saveLicenses()) {
+    toast('Da tao Free key!');
+    renderLicenses();
+    closeModals();
+  } else toast('Loi luu!', false);
+}
+
+async function delLicense(did) {
+  if (!confirm(`Xoa license "${did}"?`)) return;
+  delete DATA.licenses[did];
+  if (await saveLicenses()) {
+    toast('Da xoa!');
+    renderLicenses();
+  } else toast('Loi xoa!', false);
+}
+
+// Auto login
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('fp_token');
+  if (saved) {
+    TOKEN = saved;
+    fetchLicenses().then(() => {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+    }).catch(() => {
+      localStorage.removeItem('fp_token');
+    });
+  }
+});
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) closeModals(); });
+});
+</script>
+</body>
+</html>

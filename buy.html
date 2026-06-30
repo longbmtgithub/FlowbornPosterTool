@@ -202,11 +202,71 @@ input::placeholder { color: #444; }
 
 .hint { font-size: 11px; color: #555; margin-top: 6px; }
 .hint code { background: #1a1a2a; padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #00d9f5; }
-.divider { border: none; border-top: 1px solid #1e1e2e; margin: 20px 0; }
+/* Terminal preview */
+.terminal-preview {
+  border-radius: 12px; overflow: hidden; border: 1px solid #1e1e2e; margin-bottom: 20px;
+}
+.term-bar {
+  background: #1a1a2a; padding: 10px 14px; display: flex; align-items: center; gap: 6px;
+}
+.term-dot { width: 10px; height: 10px; border-radius: 50%; }
+.term-dot.red { background: #f55; }
+.term-dot.yellow { background: #f5a623; }
+.term-dot.green { background: #00f5a0; }
+.term-title { margin-left: 10px; font-size: 12px; color: #666; }
+.term-body {
+  background: #0d0d14; padding: 16px; font-family: 'Courier New', monospace; font-size: 13px;
+  line-height: 1.8;
+}
+.term-line { color: #ccc; }
+.term-line.dim { color: #555; }
+.term-prompt { color: #00f5a0; margin-right: 8px; }
+.term-cursor { color: #00f5a0; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Shell steps */
+.shell-steps { display: flex; flex-direction: column; gap: 10px; }
+.shell-step {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; background: #0a0a0f; border-radius: 10px;
+  font-size: 13px; color: #999;
+}
+.shell-step code { background: #1a1a2a; padding: 2px 8px; border-radius: 4px; color: #00d9f5; font-size: 12px; }
+.shell-num {
+  width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, #00f5a020, #00d9f520);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: #00f5a0; font-size: 13px;
+}
+
+/* Shell iframe */
+.shell-toolbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; background: #1a1a2a; border-radius: 12px 12px 0 0;
+  border: 1px solid #1e1e2e; border-bottom: none;
+}
+.shell-toolbar-left { display: flex; align-items: center; gap: 10px; }
+.shell-toolbar-right { display: flex; gap: 8px; }
+.shell-status { font-size: 12px; color: #00f5a0; font-weight: 600; }
+.shell-frame {
+  width: 100%; height: 500px; border: 1px solid #1e1e2e; border-radius: 0 0 12px 12px;
+  background: #0d0d14;
+}
+.shell-tips {
+  display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+  font-size: 12px; color: #666;
+}
+.chip {
+  padding: 5px 14px; background: #1a1a2a; border: 1px solid #2a2a3a; border-radius: 8px;
+  color: #00d9f5; font-size: 12px; font-family: 'Courier New', monospace;
+  cursor: pointer; transition: all 0.2s;
+}
+.chip:hover { background: #2a2a3a; border-color: #00f5a044; }
 
 @media (max-width: 600px) {
   .header h1 { font-size: 24px; }
   .plans { grid-template-columns: 1fr; }
+  .shell-frame { height: 400px; }
 }
 </style>
 </head>
@@ -341,6 +401,80 @@ input::placeholder { color: #444; }
 
       <button class="btn-big" id="btn-activate" onclick="activate()">⚡ Kích hoạt ngay</button>
       <div class="result" id="activate-result"></div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-bar">
+      💬 Mua gói Tuần/Tháng liên hệ: <strong>beterHa90</strong><br>
+      <span style="font-size:12px; color:#555;">Zalo / Facebook / Telegram</span>
+    </div>
+  </div>
+
+    <!-- Cloud Shell Terminal -->
+    <div class="card" id="shell-section">
+      <h2>💻 Cloud Shell Terminal</h2>
+      <p class="sub">Chạy tool trực tiếp trên trình duyệt — không cần cài đặt!</p>
+
+      <div id="shell-closed">
+        <div class="terminal-preview">
+          <div class="term-bar">
+            <span class="term-dot red"></span>
+            <span class="term-dot yellow"></span>
+            <span class="term-dot green"></span>
+            <span class="term-title">Cloud Shell</span>
+          </div>
+          <div class="term-body">
+            <div class="term-line"><span class="term-prompt">$</span> git clone FlowbornPosterTool</div>
+            <div class="term-line dim">Cloning into 'FlowbornPosterTool'... done.</div>
+            <div class="term-line"><span class="term-prompt">$</span> sh r</div>
+            <div class="term-line dim">Installing requests, Pillow...</div>
+            <div class="term-line" style="color:#00f5a0">✓ Flowborn Poster Tool v1.0 ready!</div>
+            <div class="term-line"><span class="term-cursor">▋</span></div>
+          </div>
+        </div>
+
+        <div class="shell-steps">
+          <div class="shell-step">
+            <span class="shell-num">1</span>
+            <span>Nhấn nút bên dưới để mở Cloud Shell</span>
+          </div>
+          <div class="shell-step">
+            <span class="shell-num">2</span>
+            <span>Upload file <code>.har</code> (nút ⋮ → Upload)</span>
+          </div>
+          <div class="shell-step">
+            <span class="shell-num">3</span>
+            <span>Gõ <code>sh r</code> để chạy tool</span>
+          </div>
+        </div>
+
+        <button class="btn-big" onclick="openShell()" style="margin-top:20px">
+          ☁️ Mở Cloud Shell Terminal
+        </button>
+        <p class="hint" style="text-align:center; margin-top:8px">Miễn phí · Cần tài khoản Google · Không cần cài đặt</p>
+      </div>
+
+      <div id="shell-open" style="display:none">
+        <div class="shell-toolbar">
+          <div class="shell-toolbar-left">
+            <span class="shell-status">● Connected</span>
+          </div>
+          <div class="shell-toolbar-right">
+            <button class="btn-sm btn-register" onclick="openShellNewTab()">↗ Mở tab mới</button>
+            <button class="btn-sm btn-logout" onclick="closeShell()">✕ Đóng</button>
+          </div>
+        </div>
+        <iframe id="shell-iframe" class="shell-frame"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+          allow="clipboard-read; clipboard-write">
+        </iframe>
+        <div class="shell-tips">
+          <span>💡 Lệnh nhanh:</span>
+          <button class="chip" onclick="copyCmd('sh r')">sh r</button>
+          <button class="chip" onclick="copyCmd('python3 flowborn_poster.py --device-id')">--device-id</button>
+          <button class="chip" onclick="copyCmd('ls *.har')">ls *.har</button>
+        </div>
+      </div>
     </div>
 
     <!-- Contact -->
@@ -660,6 +794,39 @@ document.addEventListener('keydown', e => {
 });
 
 selectPlan(document.querySelector('.plan.selected'));
+
+// === CLOUD SHELL ===
+const SHELL_URL = 'https://shell.cloud.google.com/cloudshell/open?git_repo=https://github.com/longbmtgithub/FlowbornPosterTool&shellonly=true';
+
+function openShell() {
+  document.getElementById('shell-closed').style.display = 'none';
+  document.getElementById('shell-open').style.display = 'block';
+  document.getElementById('shell-iframe').src = SHELL_URL;
+  toast('Cloud Shell đang khởi động...');
+}
+
+function closeShell() {
+  document.getElementById('shell-iframe').src = '';
+  document.getElementById('shell-open').style.display = 'none';
+  document.getElementById('shell-closed').style.display = 'block';
+}
+
+function openShellNewTab() {
+  window.open(SHELL_URL, '_blank');
+}
+
+function copyCmd(cmd) {
+  navigator.clipboard.writeText(cmd).then(() => {
+    toast('Đã copy: ' + cmd);
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = cmd; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('Đã copy: ' + cmd);
+  });
+}
 </script>
 </body>
 </html>

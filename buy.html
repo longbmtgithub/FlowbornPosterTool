@@ -211,6 +211,22 @@ input::placeholder { color: #444; }
   cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
 }
 .mode-btn.active { border-color: #00f5a0; color: #00f5a0; background: #00f5a010; }
+/* Account Status Card */
+.acc-status { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.acc-status .avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; }
+.acc-status .avatar.approved { background: linear-gradient(135deg, #00f5a0, #00d9f5); color: #0a0a0f; }
+.acc-status .avatar.pending { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; }
+.acc-status .info { flex: 1; }
+.acc-status .info .username { font-size: 18px; font-weight: 700; color: #fff; }
+.acc-status .info .meta { font-size: 12px; color: #666; margin-top: 4px; }
+.acc-status .badge { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.badge.approved { background: rgba(0,245,160,0.15); color: #00f5a0; border: 1px solid #00f5a033; }
+.badge.pending { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid #f59e0b33; }
+.acc-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.acc-stat { background: #0f0f1a; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #1a1a2a; }
+.acc-stat .val { font-size: 20px; font-weight: 700; color: #00f5a0; }
+.acc-stat .lbl { font-size: 11px; color: #555; margin-top: 4px; }
+
 /* Terminal preview */
 .terminal-preview {
   border-radius: 12px; overflow: hidden; border: 1px solid #1e1e2e; margin-bottom: 20px;
@@ -351,6 +367,11 @@ input::placeholder { color: #444; }
 
   <!-- MAIN SECTION (after login) -->
   <div id="main-section" style="display:none">
+
+    <!-- Account Status -->
+    <div class="card" id="acc-status-card">
+      <div id="acc-status-content"></div>
+    </div>
 
     <!-- My Licenses -->
     <div class="card">
@@ -511,7 +532,7 @@ input::placeholder { color: #444; }
 
 <script>
 // Force reload if outdated cache
-const APP_VERSION = '1.3.6';
+const APP_VERSION = '1.3.7';
 if (!window.location.search.includes('v=' + APP_VERSION)) {
   window.location.replace(window.location.pathname + '?v=' + APP_VERSION + '&t=' + Date.now());
 }
@@ -685,7 +706,53 @@ async function onLoggedIn() {
   document.getElementById('nav-uname').textContent = displayName;
   document.getElementById('acc-username').value = currentUser;
 
+  renderAccountStatus();
   renderMyLicenses();
+}
+
+function renderAccountStatus() {
+  const acc = DATA.accounts[currentUser] || {};
+  const status = acc.status || 'approved';
+  const isApproved = status === 'approved';
+  const displayName = acc.name || currentUser;
+  const created = acc.created || '-';
+
+  // Web license info
+  const wl = (DATA.web_licenses || {})[currentUser];
+  const hasLic = !!wl;
+  let licMax = '-', licExp = '-', licStatus = 'Chưa kích hoạt';
+  if (wl) {
+    licMax = wl.max || 0;
+    licExp = wl.expires || 'Vĩnh viễn';
+    const isExpired = wl.expires && new Date() > new Date(wl.expires + 'T23:59:59');
+    licStatus = isExpired ? '⏰ Hết hạn' : (licMax === 0 ? '⏳ Chờ TT' : '✅ Hoạt động');
+  }
+
+  const el = document.getElementById('acc-status-content');
+  el.innerHTML = `
+    <div class="acc-status">
+      <div class="avatar ${isApproved ? 'approved' : 'pending'}">${displayName[0].toUpperCase()}</div>
+      <div class="info">
+        <div class="username">${displayName} <span style="color:#666;font-size:13px;font-weight:400">@${currentUser}</span></div>
+        <div class="meta">Ngày tạo: ${created}</div>
+      </div>
+      <span class="badge ${isApproved ? 'approved' : 'pending'}">${isApproved ? '✅ Đã duyệt' : '⏳ Chờ duyệt'}</span>
+    </div>
+    <div class="acc-stats">
+      <div class="acc-stat">
+        <div class="val">${isApproved ? '🟢' : '🟡'}</div>
+        <div class="lbl">Trạng thái TK</div>
+      </div>
+      <div class="acc-stat">
+        <div class="val" style="color:${hasLic ? '#00f5a0' : '#666'}">${hasLic ? licMax : '-'}</div>
+        <div class="lbl">Lượt còn lại</div>
+      </div>
+      <div class="acc-stat">
+        <div class="val" style="font-size:14px;color:${hasLic ? '#00d9f5' : '#666'}">${licExp}</div>
+        <div class="lbl">Hạn sử dụng</div>
+      </div>
+    </div>
+  `;
 }
 
 // === LICENSES ===

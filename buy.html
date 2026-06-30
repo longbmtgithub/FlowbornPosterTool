@@ -744,25 +744,33 @@ async function activate() {
   try {
     await fetchData();
 
-    // Check existing
-    const store = isAccount ? (DATA.web_licenses || {}) : (DATA.licenses || {});
-    if (store[key]) {
-      showActivateResult('success', '✅', isAccount ? 'Tài khoản đã được kích hoạt!' : 'Thiết bị đã được kích hoạt!',
-        `Đã có license.`, key, store[key], isAccount);
-      btn.disabled = false; btn.textContent = origText;
-      return;
-    }
-
-    // Block free trial if already used
+    // Block free trial if already used (check FIRST)
     if (plan.auto) {
       if (!DATA.used_trials) DATA.used_trials = [];
       const trialKey = isAccount ? `acc:${key}` : `dev:${key}`;
       if (DATA.used_trials.includes(trialKey)) {
         showActivateResult('error', '🚫', 'Đã hết lượt dùng thử!',
-          'Mỗi tài khoản/thiết bị chỉ được dùng thử 1 lần.<br>Liên hệ <strong>beterHa90</strong> để mua gói.', key, null, isAccount);
+          'Mỗi tài khoản/thiết bị chỉ được dùng thử 1 lần.<br>Liên hệ <strong>beterHa90</strong> để mua gói Tuần/Tháng.', key, null, isAccount);
         btn.disabled = false; btn.textContent = origText;
         return;
       }
+    }
+
+    // Check existing license
+    const store = isAccount ? (DATA.web_licenses || {}) : (DATA.licenses || {});
+    if (store[key]) {
+      const lic = store[key];
+      // If existing but expired/used-up, show warning instead of "success"
+      const isExpired = lic.expires && new Date() > new Date(lic.expires + 'T23:59:59');
+      if (isExpired || lic.max === 0) {
+        showActivateResult('error', '⏰', 'License đã hết hạn!',
+          'Liên hệ <strong>beterHa90</strong> để gia hạn hoặc mua gói mới.', key, lic, isAccount);
+      } else {
+        showActivateResult('success', '✅', isAccount ? 'Tài khoản đang hoạt động!' : 'Thiết bị đang hoạt động!',
+          'Đã có license.', key, lic, isAccount);
+      }
+      btn.disabled = false; btn.textContent = origText;
+      return;
     }
 
     const entry = plan.auto

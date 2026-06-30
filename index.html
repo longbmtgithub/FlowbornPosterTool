@@ -404,7 +404,7 @@ function openEditAcc(user) {
 
   document.getElementById('edit-title').textContent = '✏️ Sua / Gia han TK: ' + user;
   document.getElementById('edit-did').value = user;
-  document.getElementById('edit-max').value = lic ? (lic.max || 999) : 999;
+  document.getElementById('edit-max').value = lic ? (lic.max || 0) : 0;
   document.getElementById('edit-exp').value = lic ? (lic.expires || '') : '';
   document.getElementById('edit-name').value = (DATA.accounts[user] || {}).name || user;
   showModal('edit');

@@ -14,8 +14,6 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
-
-/* BG effect */
 body::before {
   content: '';
   position: fixed;
@@ -30,301 +28,185 @@ body::before {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(-3%, 3%); }
 }
-
 .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
 
 /* Header */
-.header {
-  text-align: center;
-  padding: 50px 0 20px;
-}
-.header .logo {
-  font-size: 42px;
-  margin-bottom: 10px;
-}
+.header { text-align: center; padding: 40px 0 15px; }
+.header .logo { font-size: 42px; margin-bottom: 8px; }
 .header h1 {
-  font-size: 32px;
-  font-weight: 800;
+  font-size: 30px; font-weight: 800;
   background: linear-gradient(135deg, #00f5a0, #00d9f5);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 10px;
-}
-.header p { color: #666; font-size: 15px; line-height: 1.6; }
-
-/* Plans */
-.plans {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin: 40px 0;
-}
-.plan {
-  background: #12121a;
-  border: 1px solid #1e1e2e;
-  border-radius: 20px;
-  padding: 30px;
-  text-align: center;
-  transition: all 0.3s;
-  position: relative;
-  cursor: pointer;
-}
-.plan:hover { border-color: #00f5a044; transform: translateY(-4px); }
-.plan.selected { border-color: #00f5a0; box-shadow: 0 0 30px rgba(0,245,160,0.1); }
-.plan.popular::before {
-  content: '⭐ PHỔ BIẾN';
-  position: absolute;
-  top: -12px; left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #00f5a0, #00d9f5);
-  color: #0a0a0f;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 16px;
-  border-radius: 20px;
-}
-.plan .name {
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   margin-bottom: 8px;
 }
-.plan .price {
-  font-size: 36px;
-  font-weight: 800;
-  background: linear-gradient(135deg, #00f5a0, #00d9f5);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
-}
-.plan .price-sub {
-  font-size: 13px;
-  color: #555;
-  margin-bottom: 20px;
-}
-.plan .features {
-  text-align: left;
-  list-style: none;
-}
-.plan .features li {
-  padding: 6px 0;
-  font-size: 13px;
-  color: #999;
-}
-.plan .features li::before {
-  content: '✓ ';
-  color: #00f5a0;
-  font-weight: 700;
-}
-.plan .radio {
-  width: 22px; height: 22px;
-  border: 2px solid #333;
-  border-radius: 50%;
-  margin: 20px auto 0;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.plan.selected .radio {
-  border-color: #00f5a0;
-}
-.plan.selected .radio::after {
-  content: '';
-  width: 12px; height: 12px;
-  background: #00f5a0;
-  border-radius: 50%;
-}
+.header p { color: #666; font-size: 14px; }
 
-/* Activation form */
-.activate-section {
-  background: #12121a;
-  border: 1px solid #1e1e2e;
-  border-radius: 20px;
-  padding: 35px;
-  margin: 30px 0;
+/* Navbar */
+.navbar {
+  display: flex; justify-content: center; align-items: center; gap: 12px;
+  padding: 12px 0; margin-bottom: 10px;
 }
-.activate-section h2 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: #fff;
+.nav-user {
+  display: flex; align-items: center; gap: 10px;
+  background: #12121a; border: 1px solid #1e1e2e; border-radius: 12px; padding: 8px 16px;
 }
-.activate-section .sub {
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 25px;
+.nav-user .avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #0a0a0f;
 }
-.form-row {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 15px;
+.nav-user .uname { font-size: 14px; font-weight: 600; color: #fff; }
+.btn-sm {
+  padding: 8px 16px; border: none; border-radius: 10px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.2s;
 }
-.form-row .field { flex: 1; }
-.form-row label {
-  display: block;
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 6px;
-  font-weight: 600;
+.btn-login { background: linear-gradient(135deg, #00f5a0, #00d9f5); color: #0a0a0f; }
+.btn-register { background: #1e1e2e; color: #00d9f5; border: 1px solid #00d9f533; }
+.btn-logout { background: #1e1e2e; color: #888; }
+.btn-sm:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* Card */
+.card {
+  background: #12121a; border: 1px solid #1e1e2e; border-radius: 20px;
+  padding: 30px; margin-bottom: 20px;
 }
-input, select {
-  width: 100%;
-  padding: 13px 16px;
-  background: #0a0a0f;
-  border: 1px solid #2a2a3a;
-  border-radius: 12px;
-  color: #e0e0e0;
-  font-size: 14px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  transition: border 0.2s;
+.card h2 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.card .sub { font-size: 13px; color: #666; margin-bottom: 20px; }
+
+/* Auth forms */
+.auth-card { max-width: 420px; margin: 30px auto; }
+.auth-card h2 { text-align: center; }
+.auth-tabs {
+  display: flex; border-bottom: 1px solid #1e1e2e; margin-bottom: 25px;
+}
+.auth-tab {
+  flex: 1; padding: 12px; text-align: center; font-size: 14px; font-weight: 600;
+  cursor: pointer; color: #666; border-bottom: 2px solid transparent; transition: all 0.2s;
+}
+.auth-tab.active { color: #00f5a0; border-bottom-color: #00f5a0; }
+
+/* Inputs */
+input {
+  width: 100%; padding: 13px 16px;
+  background: #0a0a0f; border: 1px solid #2a2a3a; border-radius: 12px;
+  color: #e0e0e0; font-size: 14px; font-family: 'Inter', sans-serif;
+  outline: none; transition: border 0.2s;
 }
 input:focus { border-color: #00f5a0; }
 input::placeholder { color: #444; }
-.device-hint {
-  font-size: 11px;
-  color: #555;
-  margin-top: 6px;
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-size: 12px; color: #888; margin-bottom: 6px; font-weight: 600; }
+
+/* Big button */
+.btn-big {
+  width: 100%; padding: 14px; border: none; border-radius: 14px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5); color: #0a0a0f;
+  transition: all 0.3s; margin-top: 5px;
 }
-.device-hint code {
-  background: #1a1a2a;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  color: #00d9f5;
+.btn-big:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,245,160,0.2); }
+.btn-big:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Plans */
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 25px 0; }
+.plan {
+  background: #0a0a0f; border: 1px solid #1e1e2e; border-radius: 16px;
+  padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative;
+}
+.plan:hover { border-color: #00f5a044; transform: translateY(-3px); }
+.plan.selected { border-color: #00f5a0; box-shadow: 0 0 25px rgba(0,245,160,0.08); }
+.plan.popular::before {
+  content: '⭐ PHỔ BIẾN'; position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, #00f5a0, #00d9f5); color: #0a0a0f;
+  font-size: 10px; font-weight: 700; padding: 3px 14px; border-radius: 20px;
+}
+.plan .name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.plan .price {
+  font-size: 32px; font-weight: 800;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+.plan .price-sub { font-size: 12px; color: #555; margin-bottom: 14px; }
+.plan .features { text-align: left; list-style: none; }
+.plan .features li { padding: 4px 0; font-size: 12px; color: #999; }
+.plan .features li::before { content: '✓ '; color: #00f5a0; font-weight: 700; }
+.plan .dot {
+  width: 20px; height: 20px; border: 2px solid #333; border-radius: 50%;
+  margin: 14px auto 0; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.plan.selected .dot { border-color: #00f5a0; }
+.plan.selected .dot::after {
+  content: ''; width: 10px; height: 10px; background: #00f5a0; border-radius: 50%;
 }
 
-.btn-activate {
-  width: 100%;
-  padding: 16px;
-  border: none;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #00f5a0, #00d9f5);
-  color: #0a0a0f;
-  transition: all 0.3s;
-  margin-top: 10px;
-  position: relative;
-  overflow: hidden;
+/* My licenses */
+.license-list { margin-top: 15px; }
+.lic-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px; background: #0a0a0f; border-radius: 12px; margin-bottom: 8px;
+  border: 1px solid #1e1e2e;
 }
-.btn-activate:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,245,160,0.2); }
-.btn-activate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.btn-activate.loading { pointer-events: none; }
-.btn-activate.loading::after {
-  content: '';
-  position: absolute;
-  width: 20px; height: 20px;
-  border: 3px solid #0a0a0f;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-  top: 50%; left: 50%;
-  margin: -10px 0 0 -10px;
+.lic-item .did { font-family: 'Courier New', monospace; font-size: 13px; color: #00d9f5; }
+.lic-item .info { font-size: 12px; color: #888; margin-top: 3px; }
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 600;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+.tag-active { background: #00f5a020; color: #00f5a0; }
+.tag-expired { background: #f5555520; color: #f55; }
+.tag-pending { background: #f5a62320; color: #f5a623; }
+.empty-lic { text-align: center; padding: 30px; color: #444; font-size: 13px; }
 
 /* Result */
-.result {
-  display: none;
-  margin-top: 25px;
-  padding: 25px;
-  border-radius: 16px;
-  text-align: center;
-}
-.result.success {
-  background: #0a1f15;
-  border: 1px solid #00f5a033;
-}
-.result.error {
-  background: #1f0a0a;
-  border: 1px solid #f5555533;
-}
-.result .icon { font-size: 48px; margin-bottom: 12px; }
-.result h3 { font-size: 18px; margin-bottom: 8px; }
+.result { display: none; margin-top: 20px; padding: 20px; border-radius: 14px; text-align: center; }
+.result.success { background: #0a1f15; border: 1px solid #00f5a033; }
+.result.error { background: #1f0a0a; border: 1px solid #f5555533; }
+.result .icon { font-size: 40px; margin-bottom: 10px; }
+.result h3 { font-size: 16px; margin-bottom: 6px; }
 .result.success h3 { color: #00f5a0; }
 .result.error h3 { color: #f55; }
-.result p { font-size: 13px; color: #888; line-height: 1.6; }
+.result p { font-size: 13px; color: #888; line-height: 1.5; }
 .result .key-info {
-  background: #12121a;
-  border-radius: 10px;
-  padding: 15px;
-  margin-top: 15px;
-  text-align: left;
+  background: #12121a; border-radius: 10px; padding: 12px; margin-top: 12px; text-align: left;
 }
-.result .key-info .row {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 0;
-  font-size: 13px;
-}
+.result .key-info .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
 .result .key-info .row .label { color: #666; }
 .result .key-info .row .value { color: #00f5a0; font-weight: 600; }
 
-/* Steps */
-.steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-  margin: 40px 0;
+/* Contact */
+.contact-bar {
+  text-align: center; padding: 20px; color: #888; font-size: 14px;
+  background: #12121a; border: 1px solid #1e1e2e; border-radius: 16px; margin-bottom: 20px;
 }
-.step {
-  background: #12121a;
-  border: 1px solid #1e1e2e;
-  border-radius: 14px;
-  padding: 20px;
-  text-align: center;
-}
-.step .num {
-  width: 36px; height: 36px;
-  background: linear-gradient(135deg, #00f5a020, #00d9f520);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 12px;
-  font-weight: 700;
-  color: #00f5a0;
-  font-size: 16px;
-}
-.step .title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
-.step .desc { font-size: 12px; color: #666; line-height: 1.4; }
+.contact-bar strong { color: #00f5a0; }
 
 /* Footer */
-.footer {
-  text-align: center;
-  padding: 30px 0;
-  color: #333;
-  font-size: 12px;
-}
+.footer { text-align: center; padding: 25px 0; color: #333; font-size: 12px; }
 .footer a { color: #00d9f5; text-decoration: none; }
 
 /* Toast */
 .toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
+  position: fixed; bottom: 30px; left: 50%; z-index: 200;
   transform: translateX(-50%) translateY(100px);
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  z-index: 200;
-  transition: transform 0.3s ease;
-  backdrop-filter: blur(10px);
+  padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500;
+  transition: transform 0.3s ease; backdrop-filter: blur(10px);
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 .toast-ok { background: rgba(0,245,160,0.15); color: #00f5a0; border: 1px solid #00f5a033; }
 .toast-err { background: rgba(255,85,85,0.15); color: #f55; border: 1px solid #f5555533; }
 
+.hint { font-size: 11px; color: #555; margin-top: 6px; }
+.hint code { background: #1a1a2a; padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #00d9f5; }
+.divider { border: none; border-top: 1px solid #1e1e2e; margin: 20px 0; }
+
 @media (max-width: 600px) {
   .header h1 { font-size: 24px; }
   .plans { grid-template-columns: 1fr; }
-  .form-row { flex-direction: column; }
-  .steps { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -334,104 +216,142 @@ input::placeholder { color: #444; }
   <div class="header">
     <div class="logo">🎨</div>
     <h1>Flowborn Poster Tool</h1>
-    <p>Tự động tạo poster Flowborn cho Liên Quân Mobile<br>Hỗ trợ Android (Termux) & iOS (Cloud Shell)</p>
+    <p>Tự động tạo poster Flowborn cho Liên Quân Mobile</p>
   </div>
 
-  <!-- How it works -->
-  <div class="steps">
-    <div class="step">
-      <div class="num">1</div>
-      <div class="title">Lấy mã thiết bị</div>
-      <div class="desc">Chạy tool với lệnh <code>--device-id</code></div>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div id="nav-guest">
+      <button class="btn-sm btn-login" onclick="showAuth('login')">Đăng nhập</button>
+      <button class="btn-sm btn-register" onclick="showAuth('register')">Đăng ký</button>
     </div>
-    <div class="step">
-      <div class="num">2</div>
-      <div class="title">Chọn gói & kích hoạt</div>
-      <div class="desc">Nhập mã thiết bị bên dưới</div>
-    </div>
-    <div class="step">
-      <div class="num">3</div>
-      <div class="title">Sử dụng ngay!</div>
-      <div class="desc">Chạy tool và tạo poster</div>
+    <div id="nav-user" style="display:none">
+      <div class="nav-user">
+        <div class="avatar" id="nav-avatar">U</div>
+        <span class="uname" id="nav-uname">User</span>
+      </div>
+      <button class="btn-sm btn-logout" onclick="logout()">Đăng xuất</button>
     </div>
   </div>
 
-  <!-- Plans -->
-  <div class="plans">
-    <div class="plan" data-plan="trial" onclick="selectPlan(this)">
-      <div class="name">Dùng thử</div>
-      <div class="price">FREE</div>
-      <div class="price-sub">Miễn phí</div>
-      <ul class="features">
-        <li>3 lượt sử dụng</li>
-        <li>Hết hạn sau 1 ngày</li>
-        <li>Đầy đủ tính năng</li>
-      </ul>
-      <div class="radio"></div>
-    </div>
-    <div class="plan popular selected" data-plan="week" onclick="selectPlan(this)">
-      <div class="name">Tuần</div>
-      <div class="price">30K</div>
-      <div class="price-sub">~4K/ngày</div>
-      <ul class="features">
-        <li>999 lượt sử dụng</li>
-        <li>Hết hạn sau 7 ngày</li>
-        <li>Đầy đủ tính năng</li>
-        <li>Hỗ trợ ưu tiên</li>
-      </ul>
-      <div class="radio"></div>
-    </div>
-    <div class="plan" data-plan="month" onclick="selectPlan(this)">
-      <div class="name">Tháng</div>
-      <div class="price">80K</div>
-      <div class="price-sub">~2.6K/ngày</div>
-      <ul class="features">
-        <li>Không giới hạn lượt</li>
-        <li>Hết hạn sau 30 ngày</li>
-        <li>Đầy đủ tính năng</li>
-        <li>Hỗ trợ ưu tiên 24/7</li>
-      </ul>
-      <div class="radio"></div>
+  <!-- AUTH SECTION -->
+  <div id="auth-section" style="display:none">
+    <div class="card auth-card">
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Đăng nhập</div>
+        <div class="auth-tab" id="tab-register" onclick="switchTab('register')">Đăng ký</div>
+      </div>
+
+      <!-- Login -->
+      <div id="form-login">
+        <div class="form-group">
+          <label>Tên đăng nhập</label>
+          <input id="login-user" placeholder="Nhập tên đăng nhập">
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label>
+          <input id="login-pass" type="password" placeholder="Nhập mật khẩu">
+        </div>
+        <button class="btn-big" onclick="doLogin()">Đăng nhập</button>
+      </div>
+
+      <!-- Register -->
+      <div id="form-register" style="display:none">
+        <div class="form-group">
+          <label>Tên đăng nhập</label>
+          <input id="reg-user" placeholder="Ít nhất 3 ký tự">
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label>
+          <input id="reg-pass" type="password" placeholder="Ít nhất 4 ký tự">
+        </div>
+        <div class="form-group">
+          <label>Xác nhận mật khẩu</label>
+          <input id="reg-pass2" type="password" placeholder="Nhập lại mật khẩu">
+        </div>
+        <div class="form-group">
+          <label>Tên hiển thị (tuỳ chọn)</label>
+          <input id="reg-name" placeholder="Tên Zalo, Facebook...">
+        </div>
+        <button class="btn-big" onclick="doRegister()">Tạo tài khoản</button>
+      </div>
+
+      <div class="result" id="auth-result"></div>
     </div>
   </div>
 
-  <!-- Activate -->
-  <div class="activate-section">
-    <h2>🔑 Kích hoạt License</h2>
-    <p class="sub">Nhập mã thiết bị để kích hoạt tự động</p>
+  <!-- MAIN SECTION (after login) -->
+  <div id="main-section" style="display:none">
 
-    <div class="form-row">
-      <div class="field">
+    <!-- My Licenses -->
+    <div class="card">
+      <h2>📋 License của tôi</h2>
+      <p class="sub">Các thiết bị đã kích hoạt</p>
+      <div id="my-licenses"><div class="empty-lic">Chưa có license nào</div></div>
+    </div>
+
+    <!-- Activate -->
+    <div class="card">
+      <h2>🔑 Kích hoạt License mới</h2>
+      <p class="sub">Chọn gói và nhập Device ID</p>
+
+      <div class="plans">
+        <div class="plan" data-plan="trial" onclick="selectPlan(this)">
+          <div class="name">Dùng thử</div>
+          <div class="price">FREE</div>
+          <div class="price-sub">Miễn phí</div>
+          <ul class="features">
+            <li>3 lượt sử dụng</li>
+            <li>Hết hạn sau 1 ngày</li>
+            <li>Đầy đủ tính năng</li>
+          </ul>
+          <div class="dot"></div>
+        </div>
+        <div class="plan popular selected" data-plan="week" onclick="selectPlan(this)">
+          <div class="name">Tuần</div>
+          <div class="price">30K</div>
+          <div class="price-sub">~4K/ngày</div>
+          <ul class="features">
+            <li>999 lượt sử dụng</li>
+            <li>Hết hạn sau 7 ngày</li>
+            <li>Hỗ trợ ưu tiên</li>
+          </ul>
+          <div class="dot"></div>
+        </div>
+        <div class="plan" data-plan="month" onclick="selectPlan(this)">
+          <div class="name">Tháng</div>
+          <div class="price">80K</div>
+          <div class="price-sub">~2.6K/ngày</div>
+          <ul class="features">
+            <li>Không giới hạn lượt</li>
+            <li>Hết hạn sau 30 ngày</li>
+            <li>Hỗ trợ 24/7</li>
+          </ul>
+          <div class="dot"></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="form-group">
         <label>Mã thiết bị (Device ID)</label>
-        <input type="text" id="device-id" placeholder="Ví dụ: 10296e04cf07b97f" maxlength="16">
-        <p class="device-hint">Lấy bằng lệnh: <code>python3 flowborn_poster.py --device-id</code></p>
+        <input id="device-id" placeholder="Ví dụ: 10296e04cf07b97f" maxlength="16">
+        <p class="hint">Lấy bằng: <code>python3 flowborn_poster.py --device-id</code></p>
       </div>
+
+      <button class="btn-big" id="btn-activate" onclick="activate()">⚡ Kích hoạt ngay</button>
+      <div class="result" id="activate-result"></div>
     </div>
 
-    <div class="form-row">
-      <div class="field">
-        <label>Tên / Ghi chú (tuỳ chọn)</label>
-        <input type="text" id="buyer-name" placeholder="Tên Zalo, Facebook...">
-      </div>
-    </div>
-
-    <button class="btn-activate" id="btn-activate" onclick="activate()">
-      ⚡ Kích hoạt ngay
-    </button>
-
-    <div class="result" id="result"></div>
-  </div>
-
-  <!-- Contact -->
-  <div class="activate-section" style="text-align:center; padding:25px;">
-    <p style="color:#888; font-size:14px;">
-      💬 Mua gói Tuần/Tháng liên hệ: <strong style="color:#00f5a0">beterHa90</strong><br>
+    <!-- Contact -->
+    <div class="contact-bar">
+      💬 Mua gói Tuần/Tháng liên hệ: <strong>beterHa90</strong><br>
       <span style="font-size:12px; color:#555;">Zalo / Facebook / Telegram</span>
-    </p>
+    </div>
   </div>
 
   <div class="footer">
-    <p><a href="https://github.com/longbmtgithub/FlowbornPosterTool">GitHub</a> · © 2025 beterHa90</p>
+    <a href="https://github.com/longbmtgithub/FlowbornPosterTool">GitHub</a> · © 2025 beterHa90
   </div>
 </div>
 
@@ -439,8 +359,10 @@ input::placeholder { color: #444; }
 
 <script>
 const GIST_ID = 'a104c4c7c27608d9420e7ce94578b56c';
-const _0x = [['3g6Y_phg','3g1talIR','veoe1DKN','2Em3RHIM','Qymez0iU'].map(s=>s.split('').reverse().join('')).join('')];
+const _K = ['3g6Y_phg','3g1talIR','veoe1DKN','2Em3RHIM','Qymez0iU'].map(s=>s.split('').reverse().join('')).join('');
 
+let DATA = {};
+let currentUser = null;
 let selectedPlan = 'week';
 
 const PLANS = {
@@ -449,172 +371,294 @@ const PLANS = {
   month: { max: 9999, days: 30, name: 'Goi Thang', auto: false }
 };
 
-function selectPlan(el) {
-  document.querySelectorAll('.plan').forEach(p => p.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedPlan = el.dataset.plan;
-  
-  const btn = document.getElementById('btn-activate');
-  if (selectedPlan === 'trial') {
-    btn.textContent = '⚡ Kích hoạt miễn phí';
-  } else {
-    btn.textContent = '📋 Đăng ký & Liên hệ thanh toán';
-  }
-}
-
-function toast(msg, ok = true) {
+// === UTILS ===
+function toast(msg, ok=true) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show ' + (ok ? 'toast-ok' : 'toast-err');
   setTimeout(() => t.className = 'toast', 3000);
 }
 
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 function getExpiry(days) {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
+  const d = new Date(); d.setDate(d.getDate() + days);
   return d.toISOString().split('T')[0];
+}
+
+// === GIST API ===
+async function fetchData() {
+  const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+    headers: { 'Authorization': `token ${_K}` }
+  });
+  if (!r.ok) throw new Error('API error');
+  const g = await r.json();
+  DATA = JSON.parse(g.files['licenses.json'].content);
+  if (!DATA.licenses) DATA.licenses = {};
+  if (!DATA.accounts) DATA.accounts = {};
+  return DATA;
+}
+
+async function saveData() {
+  const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+    method: 'PATCH',
+    headers: { 'Authorization': `token ${_K}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ files: { 'licenses.json': { content: JSON.stringify(DATA, null, 2) } } })
+  });
+  return r.ok;
+}
+
+// === AUTH ===
+function showAuth(tab) {
+  document.getElementById('auth-section').style.display = 'block';
+  document.getElementById('main-section').style.display = 'none';
+  switchTab(tab);
+}
+
+function switchTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('auth-result').style.display = 'none';
+}
+
+async function doLogin() {
+  const user = document.getElementById('login-user').value.trim().toLowerCase();
+  const pass = document.getElementById('login-pass').value;
+  if (!user || !pass) return toast('Nhập đầy đủ thông tin!', false);
+
+  try {
+    await fetchData();
+    const acc = DATA.accounts[user];
+    if (!acc) return showAuthError('Tài khoản không tồn tại!');
+
+    const hash = await sha256(pass + '_fp_salt_' + user);
+    if (hash !== acc.pass) return showAuthError('Sai mật khẩu!');
+
+    currentUser = user;
+    localStorage.setItem('fp_user', user);
+    localStorage.setItem('fp_hash', hash);
+    onLoggedIn();
+    toast('Đăng nhập thành công!');
+  } catch (e) {
+    showAuthError('Lỗi kết nối: ' + e.message);
+  }
+}
+
+async function doRegister() {
+  const user = document.getElementById('reg-user').value.trim().toLowerCase();
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  const name = document.getElementById('reg-name').value.trim();
+
+  if (!user || !pass) return toast('Nhập đầy đủ thông tin!', false);
+  if (user.length < 3) return toast('Tên đăng nhập ít nhất 3 ký tự!', false);
+  if (pass.length < 4) return toast('Mật khẩu ít nhất 4 ký tự!', false);
+  if (pass !== pass2) return toast('Mật khẩu không khớp!', false);
+  if (/[^a-z0-9_]/.test(user)) return toast('Tên chỉ gồm chữ, số, _', false);
+
+  try {
+    await fetchData();
+    if (DATA.accounts[user]) return showAuthError('Tên đăng nhập đã tồn tại!');
+
+    const hash = await sha256(pass + '_fp_salt_' + user);
+    DATA.accounts[user] = {
+      pass: hash,
+      name: name || user,
+      devices: [],
+      created: new Date().toISOString().split('T')[0]
+    };
+
+    if (await saveData()) {
+      currentUser = user;
+      localStorage.setItem('fp_user', user);
+      localStorage.setItem('fp_hash', hash);
+      onLoggedIn();
+      toast('Đăng ký thành công!');
+    } else {
+      showAuthError('Lỗi lưu dữ liệu!');
+    }
+  } catch (e) {
+    showAuthError('Lỗi: ' + e.message);
+  }
+}
+
+function showAuthError(msg) {
+  const r = document.getElementById('auth-result');
+  r.style.display = 'block';
+  r.className = 'result error';
+  r.innerHTML = `<div class="icon">❌</div><h3>${msg}</h3>`;
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('fp_user');
+  localStorage.removeItem('fp_hash');
+  document.getElementById('nav-guest').style.display = 'flex';
+  document.getElementById('nav-user').style.display = 'none';
+  document.getElementById('auth-section').style.display = 'none';
+  document.getElementById('main-section').style.display = 'none';
+  showAuth('login');
+}
+
+async function onLoggedIn() {
+  document.getElementById('nav-guest').style.display = 'none';
+  document.getElementById('nav-user').style.display = 'flex';
+  document.getElementById('auth-section').style.display = 'none';
+  document.getElementById('main-section').style.display = 'block';
+
+  const acc = DATA.accounts[currentUser];
+  const displayName = acc ? (acc.name || currentUser) : currentUser;
+  document.getElementById('nav-avatar').textContent = displayName[0].toUpperCase();
+  document.getElementById('nav-uname').textContent = displayName;
+
+  renderMyLicenses();
+}
+
+// === LICENSES ===
+function renderMyLicenses() {
+  const acc = DATA.accounts[currentUser];
+  const devices = acc ? (acc.devices || []) : [];
+  const container = document.getElementById('my-licenses');
+
+  if (!devices.length) {
+    container.innerHTML = '<div class="empty-lic">Chưa có license nào. Kích hoạt bên dưới!</div>';
+    return;
+  }
+
+  container.innerHTML = devices.map(did => {
+    const lic = DATA.licenses[did];
+    if (!lic) return `<div class="lic-item">
+      <div><div class="did">${did}</div><div class="info">Không tìm thấy license</div></div>
+      <span class="tag tag-expired">N/A</span>
+    </div>`;
+
+    const max = lic.max || 0;
+    const exp = lic.expires || '-';
+    const name = lic.name || '';
+    let status = 'Active', cls = 'tag-active';
+    if (exp !== '-' && new Date() > new Date(exp + 'T23:59:59')) { status = 'Hết hạn'; cls = 'tag-expired'; }
+    if (name.includes('[CHO THANH TOAN]')) { status = 'Chờ TT'; cls = 'tag-pending'; }
+
+    return `<div class="lic-item">
+      <div>
+        <div class="did">${did}</div>
+        <div class="info">${max} lượt · Hạn: ${exp}</div>
+      </div>
+      <span class="tag ${cls}">${status}</span>
+    </div>`;
+  }).join('');
+}
+
+function selectPlan(el) {
+  document.querySelectorAll('.plan').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPlan = el.dataset.plan;
+  const btn = document.getElementById('btn-activate');
+  btn.textContent = selectedPlan === 'trial' ? '⚡ Kích hoạt miễn phí' : '📋 Đăng ký & Liên hệ thanh toán';
 }
 
 async function activate() {
   const did = document.getElementById('device-id').value.trim();
-  const name = document.getElementById('buyer-name').value.trim();
-  
-  if (!did) { toast('Nhập mã thiết bị!', false); return; }
-  if (did.length < 8) { toast('Mã thiết bị không hợp lệ!', false); return; }
-  
+  if (!did) return toast('Nhập mã thiết bị!', false);
+  if (did.length < 8) return toast('Mã thiết bị không hợp lệ!', false);
+
   const plan = PLANS[selectedPlan];
   const btn = document.getElementById('btn-activate');
-  btn.classList.add('loading');
-  btn.textContent = '';
-  btn.disabled = true;
-  
+  const origText = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Đang xử lý...';
+
   try {
-    // Fetch current licenses
-    const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-      headers: { 'Authorization': `token ${_0x[0]}` }
-    });
-    if (!r.ok) throw new Error('Không kết nối được server');
-    
-    const gist = await r.json();
-    const data = JSON.parse(gist.files['licenses.json'].content);
-    
-    // Check if already exists
-    if (data.licenses && data.licenses[did]) {
-      const existing = data.licenses[did];
-      const result = document.getElementById('result');
-      result.style.display = 'block';
-      result.className = 'result success';
-      result.innerHTML = `
-        <div class="icon">✅</div>
-        <h3>Thiết bị đã được kích hoạt!</h3>
-        <p>Device ID này đã có license.</p>
-        <div class="key-info">
-          <div class="row"><span class="label">Device ID</span><span class="value">${did}</span></div>
-          <div class="row"><span class="label">Số lượt</span><span class="value">${existing.max || '?'}</span></div>
-          <div class="row"><span class="label">Hết hạn</span><span class="value">${existing.expires || 'Không giới hạn'}</span></div>
-          <div class="row"><span class="label">Ghi chú</span><span class="value">${existing.name || '-'}</span></div>
-        </div>
-      `;
-      btn.classList.remove('loading');
-      btn.textContent = '⚡ Kích hoạt ngay';
-      btn.disabled = false;
+    await fetchData();
+
+    if (DATA.licenses[did]) {
+      showActivateResult('success', '✅', 'Thiết bị đã được kích hoạt!',
+        `Device ID này đã có license.`, did, DATA.licenses[did]);
+      btn.disabled = false; btn.textContent = origText;
       return;
     }
-    
-    if (!plan.auto) {
-      // Paid plan - add as pending, notify to contact
-      const entry = {
-        max: 0,
-        expires: getExpiry(1),
-        name: `[CHO THANH TOAN] ${plan.name} - ${name || 'N/A'}`,
-        plan: selectedPlan,
-        requested: new Date().toISOString()
-      };
-      if (!data.licenses) data.licenses = {};
-      data.licenses[did] = entry;
-      
-      await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `token ${_0x[0]}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          files: { 'licenses.json': { content: JSON.stringify(data, null, 2) } }
-        })
-      });
-      
-      const result = document.getElementById('result');
-      result.style.display = 'block';
-      result.className = 'result success';
-      result.innerHTML = `
-        <div class="icon">📋</div>
-        <h3>Đã đăng ký ${plan.name}!</h3>
-        <p>Liên hệ <strong>beterHa90</strong> để thanh toán và kích hoạt.</p>
-        <div class="key-info">
-          <div class="row"><span class="label">Device ID</span><span class="value">${did}</span></div>
-          <div class="row"><span class="label">Gói</span><span class="value">${plan.name}</span></div>
-          <div class="row"><span class="label">Trạng thái</span><span class="value" style="color:#f5a623">Chờ thanh toán</span></div>
-        </div>
-        <p style="margin-top:15px;">💬 Gửi mã <strong>${did}</strong> cho beterHa90 qua Zalo/Facebook</p>
-      `;
-    } else {
-      // Free trial - auto approve
-      const entry = {
-        max: plan.max,
-        expires: getExpiry(plan.days),
-        name: `${plan.name}${name ? ' - ' + name : ''}`
-      };
-      if (!data.licenses) data.licenses = {};
-      data.licenses[did] = entry;
-      
-      const save = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `token ${_0x[0]}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          files: { 'licenses.json': { content: JSON.stringify(data, null, 2) } }
-        })
-      });
-      
-      if (!save.ok) throw new Error('Lỗi kích hoạt');
-      
-      const result = document.getElementById('result');
-      result.style.display = 'block';
-      result.className = 'result success';
-      result.innerHTML = `
-        <div class="icon">🎉</div>
-        <h3>Kích hoạt thành công!</h3>
-        <p>Bạn có thể sử dụng tool ngay bây giờ.</p>
-        <div class="key-info">
-          <div class="row"><span class="label">Device ID</span><span class="value">${did}</span></div>
-          <div class="row"><span class="label">Số lượt</span><span class="value">${entry.max}</span></div>
-          <div class="row"><span class="label">Hết hạn</span><span class="value">${entry.expires}</span></div>
-          <div class="row"><span class="label">Gói</span><span class="value">${plan.name}</span></div>
-        </div>
-      `;
-      toast('Kích hoạt thành công!');
+
+    const entry = plan.auto
+      ? { max: plan.max, expires: getExpiry(plan.days), name: `${plan.name} - ${currentUser}` }
+      : { max: 0, expires: getExpiry(1), name: `[CHO THANH TOAN] ${plan.name} - ${currentUser}`, plan: selectedPlan };
+
+    DATA.licenses[did] = entry;
+
+    // Link device to account
+    if (!DATA.accounts[currentUser].devices) DATA.accounts[currentUser].devices = [];
+    if (!DATA.accounts[currentUser].devices.includes(did)) {
+      DATA.accounts[currentUser].devices.push(did);
     }
+
+    if (await saveData()) {
+      if (plan.auto) {
+        showActivateResult('success', '🎉', 'Kích hoạt thành công!',
+          'Bạn có thể sử dụng tool ngay.', did, entry);
+        toast('Kích hoạt thành công!');
+      } else {
+        showActivateResult('success', '📋', `Đã đăng ký ${plan.name}!`,
+          `Liên hệ <strong>beterHa90</strong> để thanh toán.<br>Gửi mã <strong>${did}</strong> qua Zalo/Facebook.`,
+          did, { ...entry, status: 'Chờ thanh toán' });
+      }
+      renderMyLicenses();
+    } else throw new Error('Lỗi lưu');
   } catch (e) {
-    const result = document.getElementById('result');
-    result.style.display = 'block';
-    result.className = 'result error';
-    result.innerHTML = `
-      <div class="icon">❌</div>
-      <h3>Lỗi</h3>
-      <p>${e.message}</p>
-    `;
+    showActivateResult('error', '❌', 'Lỗi', e.message, '', null);
     toast(e.message, false);
   }
-  
-  btn.classList.remove('loading');
-  btn.textContent = selectedPlan === 'trial' ? '⚡ Kích hoạt miễn phí' : '📋 Đăng ký & Liên hệ thanh toán';
-  btn.disabled = false;
+
+  btn.disabled = false; btn.textContent = origText;
 }
 
-// Init
+function showActivateResult(type, icon, title, desc, did, lic) {
+  const r = document.getElementById('activate-result');
+  r.style.display = 'block';
+  r.className = `result ${type}`;
+  let info = '';
+  if (lic) {
+    info = `<div class="key-info">
+      <div class="row"><span class="label">Device ID</span><span class="value">${did}</span></div>
+      <div class="row"><span class="label">Số lượt</span><span class="value">${lic.max || '?'}</span></div>
+      <div class="row"><span class="label">Hết hạn</span><span class="value">${lic.expires || '-'}</span></div>
+    </div>`;
+  }
+  r.innerHTML = `<div class="icon">${icon}</div><h3>${title}</h3><p>${desc}</p>${info}`;
+}
+
+// === AUTO LOGIN ===
+window.addEventListener('DOMContentLoaded', async () => {
+  const savedUser = localStorage.getItem('fp_user');
+  const savedHash = localStorage.getItem('fp_hash');
+  if (savedUser && savedHash) {
+    try {
+      await fetchData();
+      const acc = DATA.accounts[savedUser];
+      if (acc && acc.pass === savedHash) {
+        currentUser = savedUser;
+        onLoggedIn();
+        return;
+      }
+    } catch (e) {}
+    localStorage.removeItem('fp_user');
+    localStorage.removeItem('fp_hash');
+  }
+  showAuth('login');
+});
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('form-login').style.display !== 'none'
+        && document.getElementById('auth-section').style.display !== 'none') doLogin();
+    else if (document.getElementById('form-register').style.display !== 'none'
+        && document.getElementById('auth-section').style.display !== 'none') doRegister();
+  }
+});
+
 selectPlan(document.querySelector('.plan.selected'));
 </script>
 </body>

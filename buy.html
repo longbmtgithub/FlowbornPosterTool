@@ -511,7 +511,7 @@ input::placeholder { color: #444; }
 
 <script>
 // Force reload if outdated cache
-const APP_VERSION = '1.3.5';
+const APP_VERSION = '1.3.6';
 if (!window.location.search.includes('v=' + APP_VERSION)) {
   window.location.replace(window.location.pathname + '?v=' + APP_VERSION + '&t=' + Date.now());
 }
@@ -628,15 +628,16 @@ async function doRegister() {
       pass: hash,
       name: name || user,
       devices: [],
-      created: new Date().toISOString().split('T')[0]
+      created: new Date().toISOString().split('T')[0],
+      status: 'pending'
     };
 
     if (await saveData()) {
-      currentUser = user;
-      localStorage.setItem('fp_user', user);
-      localStorage.setItem('fp_hash', hash);
-      onLoggedIn();
-      toast('Đăng ký thành công!');
+      const r = document.getElementById('auth-result');
+      r.style.display = 'block';
+      r.className = 'result success';
+      r.innerHTML = `<div class="icon">⏳</div><h3>Đăng ký thành công!</h3><p>Tài khoản <strong>${user}</strong> đang chờ admin duyệt.<br>Liên hệ <strong>beterHa90</strong> để được duyệt nhanh.</p>`;
+      toast('Đăng ký OK - Chờ admin duyệt!');
     } else {
       showAuthError('Lỗi lưu dữ liệu!');
     }
@@ -664,12 +665,21 @@ function logout() {
 }
 
 async function onLoggedIn() {
+  const acc = DATA.accounts[currentUser];
+  
+  // Block pending accounts
+  if (acc && acc.status === 'pending') {
+    showAuthError('⏳ Tài khoản đang chờ admin duyệt!\nLiên hệ beterHa90 để được duyệt.');
+    currentUser = null;
+    localStorage.removeItem('fp_user');
+    return;
+  }
+
   document.getElementById('nav-guest').style.display = 'none';
   document.getElementById('nav-user').style.display = 'flex';
   document.getElementById('auth-section').style.display = 'none';
   document.getElementById('main-section').style.display = 'block';
 
-  const acc = DATA.accounts[currentUser];
   const displayName = acc ? (acc.name || currentUser) : currentUser;
   document.getElementById('nav-avatar').textContent = displayName[0].toUpperCase();
   document.getElementById('nav-uname').textContent = displayName;

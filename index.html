@@ -150,7 +150,7 @@ input::placeholder { color: #444; }
       </div>
       <div class="tbl">
         <table>
-          <thead><tr><th>Username</th><th>Ten</th><th>Ngay tao</th><th>Devices</th><th></th></tr></thead>
+          <thead><tr><th>Username</th><th>Ten</th><th>Ngay tao</th><th>Trang thai</th><th></th></tr></thead>
           <tbody id="acc-body"></tbody>
         </table>
         <div class="empty" id="acc-empty" style="display:none">Chua co tai khoan</div>
@@ -322,13 +322,21 @@ function renderAccounts() {
     const a = accs[user];
     const name = a.name || user;
     const created = a.created || '-';
-    const devs = (a.devices || []).join(', ') || '<i>Chua co</i>';
+    const status = a.status || 'approved';
+    const isPending = status === 'pending';
+    const statusTag = isPending
+      ? '<span class="tag tag-pending">Cho duyet</span>'
+      : '<span class="tag tag-active">Active</span>';
+    const approveBtn = isPending
+      ? `<button class="btn btn-add" style="padding:5px 10px;font-size:11px" onclick="approveAcc('${user}')">✓ Duyet</button>`
+      : '';
     return `<tr>
       <td><span class="did">${user}</span></td>
       <td>${name}</td>
       <td>${created}</td>
-      <td><span class="acc-devices">${devs}</span></td>
+      <td>${statusTag}</td>
       <td>
+        ${approveBtn}
         <button class="btn btn-edit" onclick="openEditAcc('${user}')">Sua</button>
         <button class="btn btn-del" onclick="delAccount('${user}')">Xoa</button>
       </td>
@@ -479,6 +487,12 @@ async function delAccount(user) {
   delete DATA.accounts[user];
   if (DATA.web_licenses) delete DATA.web_licenses[user];
   if (await saveData()) { toast('Da xoa!'); render(); } else toast('Loi!', false);
+}
+
+async function approveAcc(user) {
+  if (!DATA.accounts[user]) return;
+  DATA.accounts[user].status = 'approved';
+  if (await saveData()) { toast('Da duyet: ' + user); render(); } else toast('Loi!', false);
 }
 
 // === AUTH ===

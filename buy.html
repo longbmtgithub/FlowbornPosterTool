@@ -448,13 +448,31 @@ input::placeholder { color: #444; }
           </div>
         </div>
 
-        <button class="btn-big" onclick="openShellNewTab()" style="margin-top:20px">
-          ☁️ Mở Cloud Shell (tab mới)
-        </button>
-        <p class="hint" style="text-align:center; margin-top:8px">Miễn phí · Cần tài khoản Google · Không cần cài đặt</p>
+        <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+          <button class="btn-big" onclick="openBinder()" style="flex:1; min-width:200px">
+            ▶ Mở Terminal tại đây
+          </button>
+          <button class="btn-big" onclick="openShellNewTab()" style="flex:1; min-width:200px; background:#1e1e2e; color:#00d9f5;">
+            ↗ Google Cloud Shell (tab mới)
+          </button>
+        </div>
+        <p class="hint" style="text-align:center; margin-top:8px">Miễn phí · Không cần cài đặt · Python + Node.js sẵn</p>
+      </div>
 
-        <div class="shell-tips" style="margin-top:16px">
-          <span>📋 Copy lệnh nhanh:</span>
+      <!-- Embedded terminal -->
+      <div id="shell-embed" style="display:none">
+        <div class="shell-toolbar">
+          <div class="shell-toolbar-left">
+            <span class="shell-status" id="shell-status">⏳ Đang khởi tạo...</span>
+          </div>
+          <div class="shell-toolbar-right">
+            <button class="btn-sm btn-register" onclick="openBinderNewTab()">↗ Tab mới</button>
+            <button class="btn-sm btn-logout" onclick="closeEmbed()">✕ Đóng</button>
+          </div>
+        </div>
+        <iframe id="binder-iframe" class="shell-frame" style="height:500px"></iframe>
+        <div class="shell-tips" style="margin-top:10px">
+          <span>📋 Copy lệnh:</span>
           <button class="chip" onclick="copyCmd('sh r')">sh r</button>
           <button class="chip" onclick="copyCmd('python3 flowborn_poster.py --device-id')">--device-id</button>
           <button class="chip" onclick="copyCmd('ls *.har')">ls *.har</button>
@@ -781,31 +799,42 @@ document.addEventListener('keydown', e => {
 
 selectPlan(document.querySelector('.plan.selected'));
 
-// === CLOUD SHELL ===
+// === TERMINAL ===
 const SHELL_URL = 'https://shell.cloud.google.com/cloudshell/open?git_repo=https://github.com/longbmtgithub/FlowbornPosterTool&shellonly=true';
+const BINDER_URL = 'https://mybinder.org/v2/gh/longbmtgithub/FlowbornPosterTool/main?urlpath=terminals/1';
 
-function openShell() {
+function openBinder() {
   document.getElementById('shell-closed').style.display = 'none';
-  document.getElementById('shell-open').style.display = 'block';
-  document.getElementById('shell-iframe').src = SHELL_URL;
-  toast('Cloud Shell đang khởi động...');
+  document.getElementById('shell-embed').style.display = 'block';
+  document.getElementById('binder-iframe').src = BINDER_URL;
+  document.getElementById('shell-status').textContent = '⏳ Đang khởi tạo (30-60 giây)...';
+  toast('Terminal đang khởi tạo...');
+  
+  // Update status after delay
+  setTimeout(() => {
+    const s = document.getElementById('shell-status');
+    if (s) s.textContent = '● Connected';
+  }, 45000);
 }
 
-function closeShell() {
-  document.getElementById('shell-iframe').src = '';
-  document.getElementById('shell-open').style.display = 'none';
-  document.getElementById('shell-closed').style.display = 'block';
+function openBinderNewTab() {
+  window.open(BINDER_URL, '_blank');
 }
 
 function openShellNewTab() {
   window.open(SHELL_URL, '_blank');
 }
 
+function closeEmbed() {
+  document.getElementById('binder-iframe').src = '';
+  document.getElementById('shell-embed').style.display = 'none';
+  document.getElementById('shell-closed').style.display = 'block';
+}
+
 function copyCmd(cmd) {
   navigator.clipboard.writeText(cmd).then(() => {
     toast('Đã copy: ' + cmd);
   }).catch(() => {
-    // Fallback
     const ta = document.createElement('textarea');
     ta.value = cmd; document.body.appendChild(ta);
     ta.select(); document.execCommand('copy');

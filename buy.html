@@ -532,7 +532,7 @@ input::placeholder { color: #444; }
 
 <script>
 // Force reload if outdated cache
-const APP_VERSION = '1.3.7';
+const APP_VERSION = '1.3.8';
 if (!window.location.search.includes('v=' + APP_VERSION)) {
   window.location.replace(window.location.pathname + '?v=' + APP_VERSION + '&t=' + Date.now());
 }
@@ -645,20 +645,32 @@ async function doRegister() {
     if (DATA.accounts[user]) return showAuthError('Tên đăng nhập đã tồn tại!');
 
     const hash = await sha256(pass + '_fp_salt_' + user);
+    // Open registration until June 30, pending after
+    const openUntil = new Date('2026-06-30T23:59:59');
+    const autoApprove = new Date() <= openUntil;
+
     DATA.accounts[user] = {
       pass: hash,
       name: name || user,
       devices: [],
       created: new Date().toISOString().split('T')[0],
-      status: 'pending'
+      status: autoApprove ? 'approved' : 'pending'
     };
 
     if (await saveData()) {
-      const r = document.getElementById('auth-result');
-      r.style.display = 'block';
-      r.className = 'result success';
-      r.innerHTML = `<div class="icon">⏳</div><h3>Đăng ký thành công!</h3><p>Tài khoản <strong>${user}</strong> đang chờ admin duyệt.<br>Liên hệ <strong>beterHa90</strong> để được duyệt nhanh.</p>`;
-      toast('Đăng ký OK - Chờ admin duyệt!');
+      if (autoApprove) {
+        currentUser = user;
+        localStorage.setItem('fp_user', user);
+        localStorage.setItem('fp_hash', hash);
+        onLoggedIn();
+        toast('Đăng ký thành công! Tự động duyệt.');
+      } else {
+        const r = document.getElementById('auth-result');
+        r.style.display = 'block';
+        r.className = 'result success';
+        r.innerHTML = `<div class="icon">⏳</div><h3>Đăng ký thành công!</h3><p>Tài khoản <strong>${user}</strong> đang chờ admin duyệt.<br>Liên hệ <strong>beterHa90</strong> để được duyệt nhanh.</p>`;
+        toast('Đăng ký OK - Chờ admin duyệt!');
+      }
     } else {
       showAuthError('Lỗi lưu dữ liệu!');
     }

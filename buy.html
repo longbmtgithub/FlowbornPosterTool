@@ -202,6 +202,13 @@ input::placeholder { color: #444; }
 
 .hint { font-size: 11px; color: #555; margin-top: 6px; }
 .hint code { background: #1a1a2a; padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #00d9f5; }
+.divider { border: none; border-top: 1px solid #1e1e2e; margin: 20px 0; }
+.mode-btn {
+  flex: 1; padding: 10px; border: 1px solid #2a2a3a; border-radius: 10px;
+  background: #0a0a0f; color: #666; font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+}
+.mode-btn.active { border-color: #00f5a0; color: #00f5a0; background: #00f5a010; }
 /* Terminal preview */
 .terminal-preview {
   border-radius: 12px; overflow: hidden; border: 1px solid #1e1e2e; margin-bottom: 20px;
@@ -393,10 +400,26 @@ input::placeholder { color: #444; }
 
       <hr class="divider">
 
-      <div class="form-group">
-        <label>Mã thiết bị (Device ID)</label>
-        <input id="device-id" placeholder="Ví dụ: 10296e04cf07b97f" maxlength="16">
-        <p class="hint">Lấy bằng: <code>python3 flowborn_poster.py --device-id</code></p>
+      <!-- Activation mode toggle -->
+      <div style="display:flex; gap:8px; margin-bottom:16px;">
+        <button class="mode-btn active" id="mode-acc" onclick="setMode('account')">👤 Kích hoạt tài khoản</button>
+        <button class="mode-btn" id="mode-dev" onclick="setMode('device')">📱 Kích hoạt Device ID</button>
+      </div>
+
+      <div id="input-account">
+        <div class="form-group">
+          <label>Tài khoản</label>
+          <input id="acc-username" readonly style="color:#00f5a0; background:#0a0a0f">
+          <p class="hint">Kích hoạt trên tài khoản đang đăng nhập (dùng cho Cloud Shell)</p>
+        </div>
+      </div>
+
+      <div id="input-device" style="display:none">
+        <div class="form-group">
+          <label>Mã thiết bị (Device ID)</label>
+          <input id="device-id" placeholder="Ví dụ: 10296e04cf07b97f" maxlength="16">
+          <p class="hint">Lấy bằng: <code>python3 flowborn_poster.py --device-id</code> (dùng cho Termux/iSH)</p>
+        </div>
       </div>
 
       <button class="btn-big" id="btn-activate" onclick="activate()">⚡ Kích hoạt ngay</button>
@@ -491,6 +514,7 @@ const _K = ['3g6Y_phg','3g1talIR','veoe1DKN','2Em3RHIM','Qymez0iU'].map(s=>s.spl
 let DATA = {};
 let currentUser = null;
 let selectedPlan = 'week';
+let activationMode = 'account';
 
 const PLANS = {
   trial: { max: 3, days: 1, name: 'Dung thu', auto: true },
@@ -642,6 +666,7 @@ async function onLoggedIn() {
   const displayName = acc ? (acc.name || currentUser) : currentUser;
   document.getElementById('nav-avatar').textContent = displayName[0].toUpperCase();
   document.getElementById('nav-uname').textContent = displayName;
+  document.getElementById('acc-username').value = currentUser;
 
   renderMyLicenses();
 }
@@ -681,6 +706,14 @@ function renderMyLicenses() {
   }).join('');
 }
 
+function setMode(mode) {
+  activationMode = mode;
+  document.getElementById('mode-acc').classList.toggle('active', mode === 'account');
+  document.getElementById('mode-dev').classList.toggle('active', mode === 'device');
+  document.getElementById('input-account').style.display = mode === 'account' ? 'block' : 'none';
+  document.getElementById('input-device').style.display = mode === 'device' ? 'block' : 'none';
+}
+
 function selectPlan(el) {
   document.querySelectorAll('.plan').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
@@ -690,21 +723,30 @@ function selectPlan(el) {
 }
 
 async function activate() {
-  const did = document.getElementById('device-id').value.trim();
-  if (!did) return toast('Nhập mã thiết bị!', false);
-  if (did.length < 8) return toast('Mã thiết bị không hợp lệ!', false);
-
   const plan = PLANS[selectedPlan];
   const btn = document.getElementById('btn-activate');
   const origText = btn.textContent;
+  let key, isAccount = (activationMode === 'account');
+
+  if (isAccount) {
+    if (!currentUser) return toast('Đăng nhập trước!', false);
+    key = currentUser;
+  } else {
+    key = document.getElementById('device-id').value.trim();
+    if (!key) return toast('Nhập mã thiết bị!', false);
+    if (key.length < 8) return toast('Mã thiết bị không hợp lệ!', false);
+  }
+
   btn.disabled = true; btn.textContent = 'Đang xử lý...';
 
   try {
     await fetchData();
 
-    if (DATA.licenses[did]) {
-      showActivateResult('success', '✅', 'Thiết bị đã được kích hoạt!',
-        `Device ID này đã có license.`, did, DATA.licenses[did]);
+    // Check existing
+    const store = isAccount ? (DATA.web_licenses || {}) : (DATA.licenses || {});
+    if (store[key]) {
+      showActivateResult('success', '✅', isAccount ? 'Tài khoản đã được kích hoạt!' : 'Thiết bị đã được kích hoạt!',
+        `Đã có license.`, key, store[key], isAccount);
       btn.disabled = false; btn.textContent = origText;
       return;
     }
@@ -713,42 +755,49 @@ async function activate() {
       ? { max: plan.max, expires: getExpiry(plan.days), name: `${plan.name} - ${currentUser}` }
       : { max: 0, expires: getExpiry(1), name: `[CHO THANH TOAN] ${plan.name} - ${currentUser}`, plan: selectedPlan };
 
-    DATA.licenses[did] = entry;
-
-    // Link device to account
-    if (!DATA.accounts[currentUser].devices) DATA.accounts[currentUser].devices = [];
-    if (!DATA.accounts[currentUser].devices.includes(did)) {
-      DATA.accounts[currentUser].devices.push(did);
+    if (isAccount) {
+      if (!DATA.web_licenses) DATA.web_licenses = {};
+      DATA.web_licenses[key] = entry;
+    } else {
+      DATA.licenses[key] = entry;
+      // Link device to account
+      if (currentUser && DATA.accounts[currentUser]) {
+        if (!DATA.accounts[currentUser].devices) DATA.accounts[currentUser].devices = [];
+        if (!DATA.accounts[currentUser].devices.includes(key)) {
+          DATA.accounts[currentUser].devices.push(key);
+        }
+      }
     }
 
     if (await saveData()) {
       if (plan.auto) {
         showActivateResult('success', '🎉', 'Kích hoạt thành công!',
-          'Bạn có thể sử dụng tool ngay.', did, entry);
+          'Bạn có thể sử dụng tool ngay.', key, entry, isAccount);
         toast('Kích hoạt thành công!');
       } else {
         showActivateResult('success', '📋', `Đã đăng ký ${plan.name}!`,
-          `Liên hệ <strong>beterHa90</strong> để thanh toán.<br>Gửi mã <strong>${did}</strong> qua Zalo/Facebook.`,
-          did, { ...entry, status: 'Chờ thanh toán' });
+          `Liên hệ <strong>beterHa90</strong> để thanh toán.`,
+          key, { ...entry, status: 'Chờ thanh toán' }, isAccount);
       }
       renderMyLicenses();
     } else throw new Error('Lỗi lưu');
   } catch (e) {
-    showActivateResult('error', '❌', 'Lỗi', e.message, '', null);
+    showActivateResult('error', '❌', 'Lỗi', e.message, '', null, false);
     toast(e.message, false);
   }
 
   btn.disabled = false; btn.textContent = origText;
 }
 
-function showActivateResult(type, icon, title, desc, did, lic) {
+function showActivateResult(type, icon, title, desc, key, lic, isAccount) {
   const r = document.getElementById('activate-result');
   r.style.display = 'block';
   r.className = `result ${type}`;
   let info = '';
   if (lic) {
+    const label = isAccount ? 'Tài khoản' : 'Device ID';
     info = `<div class="key-info">
-      <div class="row"><span class="label">Device ID</span><span class="value">${did}</span></div>
+      <div class="row"><span class="label">${label}</span><span class="value">${key}</span></div>
       <div class="row"><span class="label">Số lượt</span><span class="value">${lic.max || '?'}</span></div>
       <div class="row"><span class="label">Hết hạn</span><span class="value">${lic.expires || '-'}</span></div>
     </div>`;

@@ -448,31 +448,17 @@ input::placeholder { color: #444; }
           </div>
         </div>
 
-        <button class="btn-big" onclick="openShell()" style="margin-top:20px">
-          ☁️ Mở Cloud Shell Terminal
+        <button class="btn-big" onclick="openShellNewTab()" style="margin-top:20px">
+          ☁️ Mở Cloud Shell (tab mới)
         </button>
         <p class="hint" style="text-align:center; margin-top:8px">Miễn phí · Cần tài khoản Google · Không cần cài đặt</p>
-      </div>
 
-      <div id="shell-open" style="display:none">
-        <div class="shell-toolbar">
-          <div class="shell-toolbar-left">
-            <span class="shell-status">● Connected</span>
-          </div>
-          <div class="shell-toolbar-right">
-            <button class="btn-sm btn-register" onclick="openShellNewTab()">↗ Mở tab mới</button>
-            <button class="btn-sm btn-logout" onclick="closeShell()">✕ Đóng</button>
-          </div>
-        </div>
-        <iframe id="shell-iframe" class="shell-frame"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-          allow="clipboard-read; clipboard-write">
-        </iframe>
-        <div class="shell-tips">
-          <span>💡 Lệnh nhanh:</span>
+        <div class="shell-tips" style="margin-top:16px">
+          <span>📋 Copy lệnh nhanh:</span>
           <button class="chip" onclick="copyCmd('sh r')">sh r</button>
           <button class="chip" onclick="copyCmd('python3 flowborn_poster.py --device-id')">--device-id</button>
           <button class="chip" onclick="copyCmd('ls *.har')">ls *.har</button>
+          <button class="chip" onclick="copyCmd('mv ~/ten_file.har .')">mv .har</button>
         </div>
       </div>
     </div>

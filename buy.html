@@ -449,32 +449,21 @@ input::placeholder { color: #444; }
         </div>
 
         <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
-          <button class="btn-big" onclick="openBinder()" style="flex:1; min-width:200px">
-            ▶ Mở Terminal tại đây
+          <button class="btn-big" onclick="openShellNewTab()" style="flex:1; min-width:200px">
+            ☁️ Mở Google Cloud Shell
           </button>
-          <button class="btn-big" onclick="openShellNewTab()" style="flex:1; min-width:200px; background:#1e1e2e; color:#00d9f5;">
-            ↗ Google Cloud Shell (tab mới)
+          <button class="btn-big" onclick="openBinderNewTab()" style="flex:1; min-width:200px; background:#1e1e2e; color:#00d9f5;">
+            🔬 Mở Binder Terminal
           </button>
         </div>
-        <p class="hint" style="text-align:center; margin-top:8px">Miễn phí · Không cần cài đặt · Python + Node.js sẵn</p>
-      </div>
+        <p class="hint" style="text-align:center; margin-top:8px">
+          Cloud Shell: nhanh hơn (cần Gmail) · Binder: không cần tài khoản (chậm hơn lần đầu)
+        </p>
 
-      <!-- Embedded terminal -->
-      <div id="shell-embed" style="display:none">
-        <div class="shell-toolbar">
-          <div class="shell-toolbar-left">
-            <span class="shell-status" id="shell-status">⏳ Đang khởi tạo...</span>
-          </div>
-          <div class="shell-toolbar-right">
-            <button class="btn-sm btn-register" onclick="openBinderNewTab()">↗ Tab mới</button>
-            <button class="btn-sm btn-logout" onclick="closeEmbed()">✕ Đóng</button>
-          </div>
-        </div>
-        <iframe id="binder-iframe" class="shell-frame" style="height:500px"></iframe>
-        <div class="shell-tips" style="margin-top:10px">
-          <span>📋 Copy lệnh:</span>
+        <div class="shell-tips" style="margin-top:16px">
+          <span>📋 Copy lệnh (paste vào terminal):</span>
           <button class="chip" onclick="copyCmd('sh r')">sh r</button>
-          <button class="chip" onclick="copyCmd('python3 flowborn_poster.py --device-id')">--device-id</button>
+          <button class="chip" onclick="copyCmd('python3 web_login.py')">web_login</button>
           <button class="chip" onclick="copyCmd('ls *.har')">ls *.har</button>
           <button class="chip" onclick="copyCmd('mv ~/ten_file.har .')">mv .har</button>
         </div>

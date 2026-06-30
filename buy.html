@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowborn Poster Tool - Mua Key</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0f;
+  color: #e0e0e0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* BG effect */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 20%, rgba(0,245,160,0.04) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(0,217,245,0.04) 0%, transparent 50%);
+  animation: bgFloat 20s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes bgFloat {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-3%, 3%); }
+}
+
+.container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 50px 0 20px;
+}
+.header .logo {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+.header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+.header p { color: #666; font-size: 15px; line-height: 1.6; }
+
+/* Plans */
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin: 40px 0;
+}
+.plan {
+  background: #12121a;
+  border: 1px solid #1e1e2e;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  transition: all 0.3s;
+  position: relative;
+  cursor: pointer;
+}
+.plan:hover { border-color: #00f5a044; transform: translateY(-4px); }
+.plan.selected { border-color: #00f5a0; box-shadow: 0 0 30px rgba(0,245,160,0.1); }
+.plan.popular::before {
+  content: '⭐ PHỔ BIẾN';
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  color: #0a0a0f;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 16px;
+  border-radius: 20px;
+}
+.plan .name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.plan .price {
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+.plan .price-sub {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 20px;
+}
+.plan .features {
+  text-align: left;
+  list-style: none;
+}
+.plan .features li {
+  padding: 6px 0;
+  font-size: 13px;
+  color: #999;
+}
+.plan .features li::before {
+  content: '✓ ';
+  color: #00f5a0;
+  font-weight: 700;
+}
+.plan .radio {
+  width: 22px; height: 22px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  margin: 20px auto 0;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.plan.selected .radio {
+  border-color: #00f5a0;
+}
+.plan.selected .radio::after {
+  content: '';
+  width: 12px; height: 12px;
+  background: #00f5a0;
+  border-radius: 50%;
+}
+
+/* Activation form */
+.activate-section {
+  background: #12121a;
+  border: 1px solid #1e1e2e;
+  border-radius: 20px;
+  padding: 35px;
+  margin: 30px 0;
+}
+.activate-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #fff;
+}
+.activate-section .sub {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 25px;
+}
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+.form-row .field { flex: 1; }
+.form-row label {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+input, select {
+  width: 100%;
+  padding: 13px 16px;
+  background: #0a0a0f;
+  border: 1px solid #2a2a3a;
+  border-radius: 12px;
+  color: #e0e0e0;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border 0.2s;
+}
+input:focus { border-color: #00f5a0; }
+input::placeholder { color: #444; }
+.device-hint {
+  font-size: 11px;
+  color: #555;
+  margin-top: 6px;
+}
+.device-hint code {
+  background: #1a1a2a;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #00d9f5;
+}
+
+.btn-activate {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  color: #0a0a0f;
+  transition: all 0.3s;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.btn-activate:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,245,160,0.2); }
+.btn-activate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-activate.loading { pointer-events: none; }
+.btn-activate.loading::after {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  border: 3px solid #0a0a0f;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  top: 50%; left: 50%;
+  margin: -10px 0 0 -10px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Result */
+.result {
+  display: none;
+  margin-top: 25px;
+  padding: 25px;
+  border-radius: 16px;
+  text-align: center;
+}
+.result.success {
+  background: #0a1f15;
+  border: 1px solid #00f5a033;
+}
+.result.error {
+  background: #1f0a0a;
+  border: 1px solid #f5555533;
+}
+.result .icon { font-size: 48px; margin-bottom: 12px; }
+.result h3 { font-size: 18px; margin-bottom: 8px; }
+.result.success h3 { color: #00f5a0; }
+.result.error h3 { color: #f55; }
+.result p { font-size: 13px; color: #888; line-height: 1.6; }
+.result .key-info {
+  background: #12121a;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 15px;
+  text-align: left;
+}
+.result .key-info .row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 13px;
+}
+.result .key-info .row .label { color: #666; }
+.result .key-info .row .value { color: #00f5a0; font-weight: 600; }
+
+/* Steps */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 40px 0;
+}
+.step {
+  background: #12121a;
+  border: 1px solid #1e1e2e;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+}
+.step .num {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #00f5a020, #00d9f520);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  font-weight: 700;
+  color: #00f5a0;
+  font-size: 16px;
+}
+.step .title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.step .desc { font-size: 12px; color: #666; line-height: 1.4; }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 30px 0;
+  color: #333;
+  font-size: 12px;
+}
+.footer a { color: #00d9f5; text-decoration: none; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 200;
+  transition: transform 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast-ok { background: rgba(0,245,160,0.15); color: #00f5a0; border: 1px solid #00f5a033; }
+.toast-err { background: rgba(255,85,85,0.15); color: #f55; border: 1px solid #f5555533; }
+
+@media (max-width: 600px) {
+  .header h1 { font-size: 24px; }
+  .plans { grid-template-columns: 1fr; }
+  .form-row { flex-direction: column; }
+  .steps { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="logo">🎨</div>
+    <h1>Flowborn Poster Tool</h1>
+    <p>Tự động tạo poster Flowborn cho Liên Quân Mobile<br>Hỗ trợ Android (Termux) & iOS (Cloud Shell)</p>
+  </div>
+
+  <!-- How it works -->
+  <div class="steps">
+    <div class="step">
+      <div class="num">1</div>
+      <div class="title">Lấy mã thiết bị</div>
+      <div class="desc">Chạy tool với lệnh <code>--device-id</code></div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div class="title">Chọn gói & kích hoạt</div>
+      <div class="desc">Nhập mã thiết bị bên dưới</div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div class="title">Sử dụng ngay!</div>
+      <div class="desc">Chạy tool và tạo poster</div>
+    </div>
+  </div>
+
+  <!-- Plans -->
+  <div class="plans">
+    <div class="plan" data-plan="trial" onclick="selectPlan(this)">
+      <div class="name">Dùng thử</div>
+      <div class="price">FREE</div>
+      <div class="price-sub">Miễn phí</div>
+      <ul class="features">
+        <li>3 lượt sử dụng</li>
+        <li>Hết hạn sau 1 ngày</li>
+        <li>Đầy đủ tính năng</li>
+      </ul>
+      <div class="radio"></div>
+    </div>
+    <div class="plan popular selected" data-plan="week" onclick="selectPlan(this)">
+      <div class="name">Tuần</div>
+      <div class="price">30K</div>
+      <div class="price-sub">~4K/ngày</div>
+      <ul class="features">
+        <li>999 lượt sử dụng</li>
+        <li>Hết hạn sau 7 ngày</li>
+        <li>Đầy đủ tính năng</li>
+        <li>Hỗ trợ ưu tiên</li>
+      </ul>
+      <div class="radio"></div>
+    </div>
+    <div class="plan" data-plan="month" onclick="selectPlan(this)">
+      <div class="name">Tháng</div>
+      <div class="price">80K</div>
+      <div class="price-sub">~2.6K/ngày</div>
+      <ul class="features">
+        <li>Không giới hạn lượt</li>
+        <li>Hết hạn sau 30 ngày</li>
+        <li>Đầy đủ tính năng</li>
+        <li>Hỗ trợ ưu tiên 24/7</li>
+      </ul>
+      <div class="radio"></div>
+    </div>
+  </div>
+
+  <!-- Activate -->
+  <div class="activate-section">
+    <h2>🔑 Kích hoạt License</h2>
+    <p class="sub">Nhập mã thiết bị để kích hoạt tự động</p>
+
+    <div class="form-row">
+      <div class="field">
+        <label>Mã thiết bị (Device ID)</label>
+        <input type="text" id="device-id" placeholder="Ví dụ: 10296e04cf07b97f" maxlength="16">
+        <p class="device-hint">Lấy bằng lệnh: <code>python3 flowborn_poster.py --device-id</code></p>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label>Tên / Ghi chú (tuỳ chọn)</label>
+        <input type="text" id="buyer-name" placeholder="Tên Zalo, Facebook...">
+      </div>
+    </div>
+
+    <button class="btn-activate" id="btn-activate" onclick="activate()">
+      ⚡ Kích hoạt ngay
+    </button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <!-- Contact -->
+  <div class="activate-section" style="text-align:center; padding:25px;">
+    <p style="color:#888; font-size:14px;">
+      💬 Mua gói Tuần/Tháng liên hệ: <strong style="color:#00f5a0">hienmods</strong><br>
+      <span style="font-size:12px; color:#555;">Zalo / Facebook / Telegram</span>
+    </p>
+  </div>
+
+  <div class="footer">
+    <p><a href="https://github.com/longbmtgithub/FlowbornPosterTool">GitHub</a> · © 2025 hienmods</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GIST_ID = 'a104c4c7c27608d9420e7ce94578b56c';
+const _0x = [['3g6Y_phg','3g1talIR','veoe1DKN','2Em3RHIM','Qymez0iU'].map(s=>s.split('').reverse().join('')).join('')];
+
+let selectedPlan = 'week';
+
+const PLANS = {
+  trial: { max: 3, days: 1, name: 'Dung thu', auto: true },
+  week:  { max: 999, days: 7, name: 'Goi Tuan', auto: false },
+  month: { max: 9999, days: 30, name: 'Goi Thang', auto: false }
+};
+
+function selectPlan(el) {
+  document.querySelectorAll('.plan').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPlan = el.dataset.plan;
+  
+  const btn = document.getElementById('btn-activate');
+  if (selectedPlan === 'trial') {
+    btn.textContent = '⚡ Kích hoạt miễn phí';
+  } else {
+    btn.textContent = '📋 Đăng ký & Liên hệ thanh toán';
+  }
+}
+
+function toast(msg, ok = true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (ok ? 'toast-ok' : 'toast-err');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+function getExpiry(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+}
+
+async function activate() {
+  const did = document.getElementById('device-id').value.trim();
+  const name = document.getElementById('buyer-name').value.trim();
+  
+  if (!did) { toast('Nhập mã thiết bị!', false); return; }
+  if (did.length < 8) { toast('Mã thiết bị không hợp lệ!', false); return; }
+  
+  const plan = PLANS[selectedPlan];
+  const btn = document.getElementById('btn-activate');
+  btn.classList.add('loading');
+  btn.textContent = '';
+  btn.disabled = true;
+  
+  try {
+    // Fetch current licenses
+    const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: { 'Authorization': `token ${_0x[0]}` }
+    });
+    if (!r.ok) throw new Error('Không kết nối được server');
+    
+    const gist = await r.json();
+    const data = JSON.parse(gist.files['licenses.json'].content);
+    
+    // Check if already exists
+    if (data.licenses && data.licenses[did]) {
+      const existing = data.licenses[did];
+      const result = document.getElementById('result');
+      result.style.display = 'block';
+      result.className = 'result success';
+      result.innerHTML = `
+        <div class="icon">✅</div>
+        <h3>Thiết bị đã được kích hoạt!</h3>
+        <p>Device ID này đã có license.</p>
+        <div class="key-info">
+          <div class="row"><span class="label">Device ID</span><span class="value">${did}</span></div>
+          <div class="row"><span class="label">Số lượt</span><span class="value">${existing.max || '?'}</span></div>
+          <div class="row"><span class="label">Hết hạn</span><span class="value">${existing.expires || 'Không giới hạn'}</span></div>
+          <div class="row"><span class="label">Ghi chú</span><span class="value">${existing.name || '-'}</span></div>
+        </div>
+      `;
+      btn.classList.remove('loading');
+      btn.textContent = '⚡ Kích hoạt ngay';
+      btn.disabled = false;
+      return;
+    }
+    
+    if (!plan.auto) {
+      // Paid plan - add as pending, notify to contact
+      const entry = {
+        max: 0,
+        expires: getExpiry(1),
+        name: `[CHO THANH TOAN] ${plan.name} - ${name || 'N/A'}`,
+        plan: selectedPlan,
+        requested: new Date().toISOString()
+      };
+      if (!data.licenses) data.licenses = {};
+      data.licenses[did] = entry;
+      
+      await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `token ${_0x[0]}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          files: { 'licenses.json': { content: JSON.stringify(data, null, 2) } }
+        })
+      });
+      
+      const result = document.getElementById('result');
+      result.style.display = 'block';
+      result.className = 'result success';
+      result.innerHTML = `
+        <div class="icon">📋</div>
+        <h3>Đã đăng ký ${plan.name}!</h3>
+        <p>Liên hệ <strong>hienmods</strong> để thanh toán và kích hoạt.</p>
+        <div class="key-info">
+          <div class="row"><span class="label">Device ID</span><span class="value">${did}</span></div>
+          <div class="row"><span class="label">Gói</span><span class="value">${plan.name}</span></div>
+          <div class="row"><span class="label">Trạng thái</span><span class="value" style="color:#f5a623">Chờ thanh toán</span></div>
+        </div>
+        <p style="margin-top:15px;">💬 Gửi mã <strong>${did}</strong> cho hienmods qua Zalo/Facebook</p>
+      `;
+    } else {
+      // Free trial - auto approve
+      const entry = {
+        max: plan.max,
+        expires: getExpiry(plan.days),
+        name: `${plan.name}${name ? ' - ' + name : ''}`
+      };
+      if (!data.licenses) data.licenses = {};
+      data.licenses[did] = entry;
+      
+      const save = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `token ${_0x[0]}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          files: { 'licenses.json': { content: JSON.stringify(data, null, 2) } }
+        })
+      });
+      
+      if (!save.ok) throw new Error('Lỗi kích hoạt');
+      
+      const result = document.getElementById('result');
+      result.style.display = 'block';
+      result.className = 'result success';
+      result.innerHTML = `
+        <div class="icon">🎉</div>
+        <h3>Kích hoạt thành công!</h3>
+        <p>Bạn có thể sử dụng tool ngay bây giờ.</p>
+        <div class="key-info">
+          <div class="row"><span class="label">Device ID</span><span class="value">${did}</span></div>
+          <div class="row"><span class="label">Số lượt</span><span class="value">${entry.max}</span></div>
+          <div class="row"><span class="label">Hết hạn</span><span class="value">${entry.expires}</span></div>
+          <div class="row"><span class="label">Gói</span><span class="value">${plan.name}</span></div>
+        </div>
+      `;
+      toast('Kích hoạt thành công!');
+    }
+  } catch (e) {
+    const result = document.getElementById('result');
+    result.style.display = 'block';
+    result.className = 'result error';
+    result.innerHTML = `
+      <div class="icon">❌</div>
+      <h3>Lỗi</h3>
+      <p>${e.message}</p>
+    `;
+    toast(e.message, false);
+  }
+  
+  btn.classList.remove('loading');
+  btn.textContent = selectedPlan === 'trial' ? '⚡ Kích hoạt miễn phí' : '📋 Đăng ký & Liên hệ thanh toán';
+  btn.disabled = false;
+}
+
+// Init
+selectPlan(document.querySelector('.plan.selected'));
+</script>
+</body>
+</html>

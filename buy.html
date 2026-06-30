@@ -751,6 +751,18 @@ async function activate() {
       return;
     }
 
+    // Block free trial if already used
+    if (plan.auto) {
+      if (!DATA.used_trials) DATA.used_trials = [];
+      const trialKey = isAccount ? `acc:${key}` : `dev:${key}`;
+      if (DATA.used_trials.includes(trialKey)) {
+        showActivateResult('error', '🚫', 'Đã hết lượt dùng thử!',
+          'Mỗi tài khoản/thiết bị chỉ được dùng thử 1 lần.<br>Liên hệ <strong>beterHa90</strong> để mua gói.', key, null, isAccount);
+        btn.disabled = false; btn.textContent = origText;
+        return;
+      }
+    }
+
     const entry = plan.auto
       ? { max: plan.max, expires: getExpiry(plan.days), name: `${plan.name} - ${currentUser}` }
       : { max: 0, expires: getExpiry(1), name: `[CHO THANH TOAN] ${plan.name} - ${currentUser}`, plan: selectedPlan };
@@ -767,6 +779,13 @@ async function activate() {
           DATA.accounts[currentUser].devices.push(key);
         }
       }
+    }
+
+    // Track trial usage
+    if (plan.auto) {
+      if (!DATA.used_trials) DATA.used_trials = [];
+      const trialKey = isAccount ? `acc:${key}` : `dev:${key}`;
+      if (!DATA.used_trials.includes(trialKey)) DATA.used_trials.push(trialKey);
     }
 
     if (await saveData()) {

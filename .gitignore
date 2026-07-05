@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+flowborn_poster_src.py
+*.zip
+sample/
+.replit
+replit.nix
+r

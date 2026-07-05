@@ -16,6 +16,7 @@ from datetime import datetime
 
 _LICENSE_URL = "https://gist.githubusercontent.com/longbmtgithub/a104c4c7c27608d9420e7ce94578b56c/raw/licenses.json"
 _USES_FILE = os.path.expanduser("~/.fp_uses")
+_0xSESSION = None  # License session - REQUIRED for API calls
 
 def _0xD1():
     try:
@@ -35,39 +36,64 @@ def _0xD3(n):
         with open(_USES_FILE, 'w') as f: f.write(str(n))
     except: pass
 
+def _0xXR(data, key):
+    """XOR decode."""
+    return bytes(data[i] ^ key[i % len(key)] for i in range(len(data)))
+
 def _0xD4():
-    if os.environ.get('FP_WEB_AUTH') == '1': return True
+    """License check — returns session dict or None. Session contains decrypted API endpoint."""
+    global _0xSESSION
     did = _0xD1()
     try:
         import requests as _r
         resp = _r.get(_LICENSE_URL, timeout=10)
         data = resp.json()
         lics = data.get('licenses', {})
-        lic = lics.get(did)
-        if not lic and '*' not in lics:
+        lic = lics.get(did) or lics.get('*')
+        if not lic:
             print(f"\033[91m  [!] Device chua duoc cap phep: {did}\033[0m")
             print(f"\033[93m  Mua key tai: https://longbmtgithub.github.io/FlowbornPosterTool/buy.html\033[0m")
-            return False
-        if not lic: lic = lics.get('*', {})
+            return None
         if isinstance(lic, dict):
             exp = lic.get('expires', '')
             if exp:
                 try:
                     if datetime.strptime(exp, '%Y-%m-%d') < datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
-                        print(f"\033[91m  [!] License het han: {exp}\033[0m"); return False
+                        print(f"\033[91m  [!] License het han: {exp}\033[0m"); return None
                 except: pass
             max_uses = lic.get('max', 999)
             current = _0xD2()
             if current >= max_uses:
-                print(f"\033[91m  [!] Da het {max_uses} luot su dung!\033[0m"); return False
+                print(f"\033[91m  [!] Da het {max_uses} luot su dung!\033[0m"); return None
             name = lic.get('name', '')
             if '[CHO THANH TOAN]' in name:
-                print(f"\033[91m  [!] License chua thanh toan!\033[0m"); return False
+                print(f"\033[91m  [!] License chua thanh toan!\033[0m"); return None
             print(f"\033[92m  \u2713 License: {did} ({current+1}/{max_uses})\033[0m")
-        return True
+        # Decrypt API endpoint from license server key
+        _sk = data.get('_sk', '')
+        if not _sk:
+            return None
+        try:
+            import base64
+            _gk = _LICENSE_URL.split('/')[-4][:16]  # Gist ID prefix as key
+            _ep = _0xXR(base64.b64decode(_sk), _gk.encode()).decode('utf-8')
+        except:
+            return None
+        _0xSESSION = {'did': did, 'ep': _ep, 'ts': time.time()}
+        return _0xSESSION
     except:
-        print(f"\033[93m  > Khong kiem tra duoc license (offline mode)\033[0m")
-        return True
+        return None
+
+def _0xCK():
+    """Checkpoint — verify license session is still valid."""
+    if not _0xSESSION: sys.exit(1)
+    if time.time() - _0xSESSION.get('ts', 0) > 7200: sys.exit(1)
+    if not _0xSESSION.get('ep', '').startswith('https://'): sys.exit(1)
+
+def _0xEP():
+    """Get API base from session — tool CANNOT work without this."""
+    _0xCK()
+    return _0xSESSION['ep']
 
 try:
     import requests
@@ -136,7 +162,7 @@ COS_REGION          = "ap-singapore"
 COS_HOST            = "{}.cos.{}.myqcloud.com".format(COS_BUCKET, COS_REGION)
 CDN_BASE            = "https://kg-camp-ugc.mobagarena.com"
 CDN_OFFICIAL        = "https://kg-camp.mobagarena.com"
-API_BASE            = "https://kgvn-api.mobagarena.com"
+API_BASE            = None  # Set by license session
 IMAGE_EXTS          = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4"}
 DEFAULT_HAR         = "auto"
 OFFICIAL_STICKER_ID = "190"
@@ -472,7 +498,7 @@ def init_sign_bridge_for_acc(session, auth_token, encode_param,
 
     try:
         r = session.post(
-            API_BASE + "/api/user/game/getselfuserinfo",
+            _0xEP() + "/api/user/game/getselfuserinfo",
             headers=hdrs,
             json={},
             timeout=10,
@@ -835,7 +861,8 @@ def api_post(session, endpoint, payload, auth_token,
         # Tao traceparent moi cho moi retry
         hdrs["traceparent"] = gen_traceparent()
         try:
-            r = session.post(API_BASE+endpoint,
+            _0xCK()
+            r = session.post(_0xEP()+endpoint,
                              json=payload, headers=hdrs, timeout=25)
             # Khong dung raise_for_status — doc response body du 4xx
             try:
@@ -1368,8 +1395,12 @@ def run(har_path_arg, image_dir, rounds_arg):
     print("{}{}".format(C.PURPLE, "═"*62) + C.RESET)
 
     print("\n" + info("Kiem tra license..."))
-    if not _0xD4():
+    _sess = _0xD4()
+    if not _sess:
+        print(err("Khong co license hop le!"))
         sys.exit(1)
+    global API_BASE
+    API_BASE = _sess['ep']
 
     print("\n" + info("Kiem tra ket noi..."))
     if not check_connectivity():

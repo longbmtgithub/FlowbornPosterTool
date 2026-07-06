@@ -70,13 +70,25 @@ echo -e "${CYAN}${BOLD}═══════════════════
 
 if [ "$FILES_OK" = true ]; then
     echo -e "${GREEN}${BOLD}✓  Setup hoan tat!${RESET}"
+
+    # Tao lenh tat 'flb'
+    FLB_PATH="$PREFIX/bin/flb"
+    TOOL_DIR="$(pwd)"
+    echo "#!/data/data/com.termux/files/usr/bin/bash" > "$FLB_PATH"
+    echo "cd \"$TOOL_DIR\" && exec python flowborn_poster.py \"\$@\"" >> "$FLB_PATH"
+    chmod +x "$FLB_PATH"
+    echo -e "${GREEN}✓  Lenh tat 'flb' da duoc tao!${RESET}"
+
     echo ""
     echo -e "${CYAN}  CACH SU DUNG:${RESET}"
     echo -e "  1. Copy file ${YELLOW}.har${RESET} vao thu muc nay"
     echo -e "  2. Copy ${YELLOW}anh/video${RESET} vao thu muc nay"
-    echo -e "  3. Chay: ${GREEN}python flowborn_poster.py${RESET}"
+    echo -e "  3. Chay: ${GREEN}flb${RESET}"
     echo ""
-    echo -e "  Test sign bridge: ${GREEN}python flowborn_poster.py --test-sign${RESET}"
+    echo -e "  ${CYAN}Cac lenh khac:${RESET}"
+    echo -e "    ${GREEN}flb${RESET}              — Chay tool"
+    echo -e "    ${GREEN}flb --device-id${RESET}  — Xem ma thiet bi"
+    echo -e "    ${GREEN}flb --test-sign${RESET}  — Test sign bridge"
 else
     echo -e "${RED}${BOLD}✗  Thieu files! Vui long copy day du files.${RESET}"
 fi

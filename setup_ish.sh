@@ -72,13 +72,23 @@ echo "════════════════════════�
 
 if [ "$FILES_OK" = true ]; then
     echo "[OK] Setup hoan tat!"
+
+    # Tao lenh tat 'flb'
+    TOOL_DIR="$(pwd)"
+    echo "#!/bin/sh" > /usr/local/bin/flb
+    echo "cd \"$TOOL_DIR\" && exec python3 flowborn_poster.py \"\$@\"" >> /usr/local/bin/flb
+    chmod +x /usr/local/bin/flb
+    echo "[OK] Lenh tat 'flb' da duoc tao!"
+
     echo ""
     echo "  CACH SU DUNG:"
     echo "  1. Copy file .har vao thu muc nay"
     echo "  2. Copy anh/video vao thu muc nay"
-    echo "  3. Chay: python3 flowborn_poster.py"
+    echo "  3. Chay: flb"
     echo ""
-    echo "  Lay ma thiet bi: python3 flowborn_poster.py --device-id"
+    echo "  flb              — Chay tool"
+    echo "  flb --device-id  — Xem ma thiet bi"
+    echo "  flb --test-sign  — Test sign bridge"
 else
     echo "[FAIL] Thieu files! Vui long copy day du files."
 fi

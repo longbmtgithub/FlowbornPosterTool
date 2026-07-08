@@ -25,8 +25,6 @@ r
 requirements.txt
 web_login.py
 setup_cloud.sh
-buy.html
-index.html
 
 # Obfuscator tools
 obfuscate*.py

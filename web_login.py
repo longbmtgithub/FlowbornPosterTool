@@ -51,10 +51,11 @@ def check_web_license():
     # Fetch licenses
     print("\033[90m  > Kiem tra license...\033[0m")
     try:
-        r = requests.get(LICENSE_URL, timeout=10)
+        import time
+        r = requests.get(LICENSE_URL + f"?_t={int(time.time())}", timeout=10)
         data = r.json()
-    except:
-        print("\033[91m  [!] Khong ket noi duoc server license!\033[0m")
+    except Exception as e:
+        print(f"\033[91m  [!] Khong ket noi duoc server license: {e}\033[0m")
         return False
     
     accounts = data.get('accounts', {})

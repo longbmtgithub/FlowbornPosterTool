@@ -1,0 +1,32 @@
+__pycache__/
+*.pyc
+
+# Source files (NEVER push unobfuscated code)
+flowborn_poster_src.py
+loadtran_src.py
+*_src.py
+license_header.txt
+
+# Build artifacts
+*.zip
+tmp*.py
+
+# Config / secrets
+.gist_token
+.bot_admins.json
+.env
+*.har
+
+# Platform specific
+sample/
+.replit
+replit.nix
+r
+requirements.txt
+web_login.py
+setup_cloud.sh
+buy.html
+index.html
+
+# Obfuscator tools
+obfuscate*.py

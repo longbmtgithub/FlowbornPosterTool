@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<title>Flowborn Poster Tool - Mua Key</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Loading Overlay */
+.loading-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(10,10,15,0.85); z-index: 9999;
+  justify-content: center; align-items: center; flex-direction: column;
+  backdrop-filter: blur(4px);
+}
+.loading-overlay.show { display: flex; }
+.loading-spinner {
+  width: 40px; height: 40px; border: 3px solid #1e1e2e;
+  border-top-color: #00f5a0; border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+.loading-text { color: #888; font-size: 14px; margin-top: 14px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0f;
+  color: #e0e0e0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 20%, rgba(0,245,160,0.04) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(0,217,245,0.04) 0%, transparent 50%);
+  animation: bgFloat 20s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes bgFloat {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-3%, 3%); }
+}
+.container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+
+/* Header */
+.header { text-align: center; padding: 40px 0 15px; }
+.header .logo { font-size: 42px; margin-bottom: 8px; }
+.header h1 {
+  font-size: 30px; font-weight: 800;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.header p { color: #666; font-size: 14px; }
+
+/* Navbar */
+.navbar {
+  display: flex; justify-content: center; align-items: center; gap: 12px;
+  padding: 12px 0; margin-bottom: 10px;
+}
+.nav-user {
+  display: flex; align-items: center; gap: 10px;
+  background: #12121a; border: 1px solid #1e1e2e; border-radius: 12px; padding: 8px 16px;
+}
+.nav-user .avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #0a0a0f;
+}
+.nav-user .uname { font-size: 14px; font-weight: 600; color: #fff; }
+.btn-sm {
+  padding: 8px 16px; border: none; border-radius: 10px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.2s;
+}
+.btn-login { background: linear-gradient(135deg, #00f5a0, #00d9f5); color: #0a0a0f; }
+.btn-register { background: #1e1e2e; color: #00d9f5; border: 1px solid #00d9f533; }
+.btn-logout { background: #1e1e2e; color: #888; }
+.btn-sm:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* Card */
+.card {
+  background: #12121a; border: 1px solid #1e1e2e; border-radius: 20px;
+  padding: 30px; margin-bottom: 20px;
+}
+.card h2 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.card .sub { font-size: 13px; color: #666; margin-bottom: 20px; }
+
+/* Auth forms */
+.auth-card { max-width: 420px; margin: 30px auto; }
+.auth-card h2 { text-align: center; }
+.auth-tabs {
+  display: flex; border-bottom: 1px solid #1e1e2e; margin-bottom: 25px;
+}
+.auth-tab {
+  flex: 1; padding: 12px; text-align: center; font-size: 14px; font-weight: 600;
+  cursor: pointer; color: #666; border-bottom: 2px solid transparent; transition: all 0.2s;
+}
+.auth-tab.active { color: #00f5a0; border-bottom-color: #00f5a0; }
+
+/* Inputs */
+input {
+  width: 100%; padding: 13px 16px;
+  background: #0a0a0f; border: 1px solid #2a2a3a; border-radius: 12px;
+  color: #e0e0e0; font-size: 14px; font-family: 'Inter', sans-serif;
+  outline: none; transition: border 0.2s;
+}
+input:focus { border-color: #00f5a0; }
+input::placeholder { color: #444; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-size: 12px; color: #888; margin-bottom: 6px; font-weight: 600; }
+
+/* Big button */
+.btn-big {
+  width: 100%; padding: 14px; border: none; border-radius: 14px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5); color: #0a0a0f;
+  transition: all 0.3s; margin-top: 5px;
+}
+.btn-big:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,245,160,0.2); }
+.btn-big:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Plans */
+.plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 25px 0; }
+.plan {
+  background: #0a0a0f; border: 1px solid #1e1e2e; border-radius: 16px;
+  padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative;
+}
+.plan:hover { border-color: #00f5a044; transform: translateY(-3px); }
+.plan.selected { border-color: #00f5a0; box-shadow: 0 0 25px rgba(0,245,160,0.08); }
+.plan.popular::before {
+  content: 'Γ¡É PHß╗ö BIß║╛N'; position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, #00f5a0, #00d9f5); color: #0a0a0f;
+  font-size: 10px; font-weight: 700; padding: 3px 14px; border-radius: 20px;
+}
+.plan .name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.plan .price {
+  font-size: 32px; font-weight: 800;
+  background: linear-gradient(135deg, #00f5a0, #00d9f5);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+.plan .price-sub { font-size: 12px; color: #555; margin-bottom: 14px; }
+.plan .features { text-align: left; list-style: none; }
+.plan .features li { padding: 4px 0; font-size: 12px; color: #999; }
+.plan .features li::before { content: 'Γ£ô '; color: #00f5a0; font-weight: 700; }
+.plan .dot {
+  width: 20px; height: 20px; border: 2px solid #333; border-radius: 50%;
+  margin: 14px auto 0; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.plan.selected .dot { border-color: #00f5a0; }
+.plan.selected .dot::after {
+  content: ''; width: 10px; height: 10px; background: #00f5a0; border-radius: 50%;
+}
+
+/* My licenses */
+.license-list { margin-top: 15px; }
+.lic-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px; background: #0a0a0f; border-radius: 12px; margin-bottom: 8px;
+  border: 1px solid #1e1e2e;
+}
+.lic-item .did { font-family: 'Courier New', monospace; font-size: 13px; color: #00d9f5; }
+.lic-item .info { font-size: 12px; color: #888; margin-top: 3px; }
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 600;
+}
+.tag-active { background: #00f5a020; color: #00f5a0; }
+.tag-expired { background: #f5555520; color: #f55; }
+.tag-pending { background: #f5a62320; color: #f5a623; }
+.empty-lic { text-align: center; padding: 30px; color: #444; font-size: 13px; }
+
+/* Result */
+.result { display: none; margin-top: 20px; padding: 20px; border-radius: 14px; text-align: center; }
+.result.success { background: #0a1f15; border: 1px solid #00f5a033; }
+.result.error { background: #1f0a0a; border: 1px solid #f5555533; }
+.result .icon { font-size: 40px; margin-bottom: 10px; }
+.result h3 { font-size: 16px; margin-bottom: 6px; }
+.result.success h3 { color: #00f5a0; }
+.result.error h3 { color: #f55; }
+.result p { font-size: 13px; color: #888; line-height: 1.5; }
+.result .key-info {
+  background: #12121a; border-radius: 10px; padding: 12px; margin-top: 12px; text-align: left;
+}
+.result .key-info .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.result .key-info .row .label { color: #666; }
+.result .key-info .row .value { color: #00f5a0; font-weight: 600; }
+
+/* Contact */
+.contact-bar {
+  text-align: center; padding: 20px; color: #888; font-size: 14px;
+  background: #12121a; border: 1px solid #1e1e2e; border-radius: 16px; margin-bottom: 20px;
+}
+.contact-bar strong { color: #00f5a0; }
+
+/* Footer */
+.footer { text-align: center; padding: 25px 0; color: #333; font-size: 12px; }
+.footer a { color: #00d9f5; text-decoration: none; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 30px; left: 50%; z-index: 200;
+  transform: translateX(-50%) translateY(100px);
+  padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500;
+  transition: transform 0.3s ease; backdrop-filter: blur(10px);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast-ok { background: rgba(0,245,160,0.15); color: #00f5a0; border: 1px solid #00f5a033; }
+.toast-err { background: rgba(255,85,85,0.15); color: #f55; border: 1px solid #f5555533; }
+
+.hint { font-size: 11px; color: #555; margin-top: 6px; }
+.hint code { background: #1a1a2a; padding: 2px 8px; border-radius: 4px; font-size: 11px; color: #00d9f5; }
+.divider { border: none; border-top: 1px solid #1e1e2e; margin: 20px 0; }
+.mode-btn {
+  flex: 1; padding: 10px; border: 1px solid #2a2a3a; border-radius: 10px;
+  background: #0a0a0f; color: #666; font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+}
+.mode-btn.active { border-color: #00f5a0; color: #00f5a0; background: #00f5a010; }
+/* Account Status Card */
+.acc-status { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.acc-status .avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; }
+.acc-status .avatar.approved { background: linear-gradient(135deg, #00f5a0, #00d9f5); color: #0a0a0f; }
+.acc-status .avatar.pending { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; }
+.acc-status .info { flex: 1; }
+.acc-status .info .username { font-size: 18px; font-weight: 700; color: #fff; }
+.acc-status .info .meta { font-size: 12px; color: #666; margin-top: 4px; }
+.acc-status .badge { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.badge.approved { background: rgba(0,245,160,0.15); color: #00f5a0; border: 1px solid #00f5a033; }
+.badge.pending { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid #f59e0b33; }
+.acc-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.acc-stat { background: #0f0f1a; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #1a1a2a; }
+.acc-stat .val { font-size: 20px; font-weight: 700; color: #00f5a0; }
+.acc-stat .lbl { font-size: 11px; color: #555; margin-top: 4px; }
+
+/* Terminal preview */
+.terminal-preview {
+  border-radius: 12px; overflow: hidden; border: 1px solid #1e1e2e; margin-bottom: 20px;
+}
+.term-bar {
+  background: #1a1a2a; padding: 10px 14px; display: flex; align-items: center; gap: 6px;
+}
+.term-dot { width: 10px; height: 10px; border-radius: 50%; }
+.term-dot.red { background: #f55; }
+.term-dot.yellow { background: #f5a623; }
+.term-dot.green { background: #00f5a0; }
+.term-title { margin-left: 10px; font-size: 12px; color: #666; }
+.term-body {
+  background: #0d0d14; padding: 16px; font-family: 'Courier New', monospace; font-size: 13px;
+  line-height: 1.8;
+}
+.term-line { color: #ccc; }
+.term-line.dim { color: #555; }
+.term-prompt { color: #00f5a0; margin-right: 8px; }
+.term-cursor { color: #00f5a0; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Shell steps */
+.shell-steps { display: flex; flex-direction: column; gap: 10px; }
+.shell-step {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; background: #0a0a0f; border-radius: 10px;
+  font-size: 13px; color: #999;
+}
+.shell-step code { background: #1a1a2a; padding: 2px 8px; border-radius: 4px; color: #00d9f5; font-size: 12px; }
+.shell-num {
+  width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, #00f5a020, #00d9f520);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: #00f5a0; font-size: 13px;
+}
+
+/* Shell iframe */
+.shell-toolbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; background: #1a1a2a; border-radius: 12px 12px 0 0;
+  border: 1px solid #1e1e2e; border-bottom: none;
+}
+.shell-toolbar-left { display: flex; align-items: center; gap: 10px; }
+.shell-toolbar-right { display: flex; gap: 8px; }
+.shell-status { font-size: 12px; color: #00f5a0; font-weight: 600; }
+.shell-frame {
+  width: 100%; height: 500px; border: 1px solid #1e1e2e; border-radius: 0 0 12px 12px;
+  background: #0d0d14;
+}
+.shell-tips {
+  display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+  font-size: 12px; color: #666;
+}
+.chip {
+  padding: 5px 14px; background: #1a1a2a; border: 1px solid #2a2a3a; border-radius: 8px;
+  color: #00d9f5; font-size: 12px; font-family: 'Courier New', monospace;
+  cursor: pointer; transition: all 0.2s;
+}
+.chip:hover { background: #2a2a3a; border-color: #00f5a044; }
+
+@media (max-width: 600px) {
+  .header h1 { font-size: 24px; }
+  .plans { grid-template-columns: 1fr; }
+  .shell-frame { height: 400px; }
+}
+</style>
+</head>
+<body>
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Đang xử lý...</div>
+</div>
+
+<div class="container">
+  <div class="header">
+    <div class="logo">≡ƒÄ¿</div>
+    <h1>Flowborn Poster Tool</h1>
+    <p>Tß╗▒ ─æß╗Öng tß║ío poster Flowborn cho Li├¬n Qu├ón Mobile</p>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div id="nav-guest">
+      <button class="btn-sm btn-login" onclick="showAuth('login')">─É─âng nhß║¡p</button>
+      <button class="btn-sm btn-register" onclick="showAuth('register')">─É─âng k├╜</button>
+    </div>
+    <div id="nav-user" style="display:none">
+      <div class="nav-user">
+        <div class="avatar" id="nav-avatar">U</div>
+        <span class="uname" id="nav-uname">User</span>
+      </div>
+      <button class="btn-sm btn-logout" onclick="logout()">─É─âng xuß║Ñt</button>
+    </div>
+  </div>
+
+  <!-- AUTH SECTION -->
+  <div id="auth-section" style="display:none">
+    <div class="card auth-card">
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">─É─âng nhß║¡p</div>
+        <div class="auth-tab" id="tab-register" onclick="switchTab('register')">─É─âng k├╜</div>
+      </div>
+
+      <!-- Login -->
+      <div id="form-login">
+        <div class="form-group">
+          <label>T├¬n ─æ─âng nhß║¡p</label>
+          <input id="login-user" placeholder="Nhß║¡p t├¬n ─æ─âng nhß║¡p">
+        </div>
+        <div class="form-group">
+          <label>Mß║¡t khß║⌐u</label>
+          <input id="login-pass" type="password" placeholder="Nhß║¡p mß║¡t khß║⌐u">
+        </div>
+        <button class="btn-big" onclick="doLogin()">─É─âng nhß║¡p</button>
+      </div>
+
+      <!-- Register -->
+      <div id="form-register" style="display:none">
+        <div class="form-group">
+          <label>T├¬n ─æ─âng nhß║¡p</label>
+          <input id="reg-user" placeholder="├ìt nhß║Ñt 3 k├╜ tß╗▒">
+        </div>
+        <div class="form-group">
+          <label>Mß║¡t khß║⌐u</label>
+          <input id="reg-pass" type="password" placeholder="├ìt nhß║Ñt 4 k├╜ tß╗▒">
+        </div>
+        <div class="form-group">
+          <label>X├íc nhß║¡n mß║¡t khß║⌐u</label>
+          <input id="reg-pass2" type="password" placeholder="Nhß║¡p lß║íi mß║¡t khß║⌐u">
+        </div>
+        <div class="form-group">
+          <label>T├¬n hiß╗ân thß╗ï (tuß╗│ chß╗ìn)</label>
+          <input id="reg-name" placeholder="T├¬n Zalo, Facebook...">
+        </div>
+        <button class="btn-big" onclick="doRegister()">Tß║ío t├ái khoß║ún</button>
+      </div>
+
+      <div class="result" id="auth-result"></div>
+    </div>
+  </div>
+
+  <!-- MAIN SECTION (after login) -->
+  <div id="main-section" style="display:none">
+
+    <!-- Account Status -->
+    <div class="card" id="acc-status-card">
+      <div id="acc-status-content"></div>
+    </div>
+
+    <!-- My Licenses -->
+    <div class="card">
+      <h2>≡ƒôï License cß╗ºa t├┤i</h2>
+      <p class="sub">C├íc thiß║┐t bß╗ï ─æ├ú k├¡ch hoß║ít</p>
+      <div id="my-licenses"><div class="empty-lic">Ch╞░a c├│ license n├áo</div></div>
+    </div>
+
+    <!-- Activate -->
+    <div class="card">
+      <h2>≡ƒöæ K├¡ch hoß║ít License mß╗¢i</h2>
+      <p class="sub">Chß╗ìn g├│i v├á nhß║¡p Device ID</p>
+
+      <div class="plans">
+        <div class="plan" data-plan="trial" onclick="selectPlan(this)">
+          <div class="name">D├╣ng thß╗¡</div>
+          <div class="price">FREE</div>
+          <div class="price-sub">Miß╗àn ph├¡</div>
+          <ul class="features">
+            <li>3 l╞░ß╗út sß╗¡ dß╗Ñng</li>
+            <li>Hß║┐t hß║ín sau 1 ng├áy</li>
+            <li>─Éß║ºy ─æß╗º t├¡nh n─âng</li>
+          </ul>
+          <div class="dot"></div>
+        </div>
+        <div class="plan popular selected" data-plan="week" onclick="selectPlan(this)">
+          <div class="name">Tuß║ºn</div>
+          <div class="price">30K</div>
+          <div class="price-sub">~4K/ng├áy</div>
+          <ul class="features">
+            <li>999 l╞░ß╗út sß╗¡ dß╗Ñng</li>
+            <li>Hß║┐t hß║ín sau 7 ng├áy</li>
+            <li>Hß╗ù trß╗ú ╞░u ti├¬n</li>
+          </ul>
+          <div class="dot"></div>
+        </div>
+        <div class="plan" data-plan="month" onclick="selectPlan(this)">
+          <div class="name">Th├íng</div>
+          <div class="price">80K</div>
+          <div class="price-sub">~2.6K/ng├áy</div>
+          <ul class="features">
+            <li>Kh├┤ng giß╗¢i hß║ín l╞░ß╗út</li>
+            <li>Hß║┐t hß║ín sau 30 ng├áy</li>
+            <li>Hß╗ù trß╗ú 24/7</li>
+          </ul>
+          <div class="dot"></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Activation mode toggle -->
+      <div style="display:flex; gap:8px; margin-bottom:16px;">
+        <button class="mode-btn active" id="mode-acc" onclick="setMode('account')">≡ƒæñ K├¡ch hoß║ít t├ái khoß║ún</button>
+        <button class="mode-btn" id="mode-dev" onclick="setMode('device')">≡ƒô▒ K├¡ch hoß║ít Device ID</button>
+      </div>
+
+      <div id="input-account">
+        <div class="form-group">
+          <label>T├ái khoß║ún</label>
+          <input id="acc-username" readonly style="color:#00f5a0; background:#0a0a0f">
+          <p class="hint">K├¡ch hoß║ít tr├¬n t├ái khoß║ún ─æang ─æ─âng nhß║¡p (d├╣ng cho Cloud Shell)</p>
+        </div>
+      </div>
+
+      <div id="input-device" style="display:none">
+        <div class="form-group">
+          <label>M├ú thiß║┐t bß╗ï (Device ID)</label>
+          <input id="device-id" placeholder="V├¡ dß╗Ñ: 10296e04cf07b97f" maxlength="16">
+          <p class="hint">Lß║Ñy bß║▒ng: <code>python3 flowborn_poster.py --device-id</code> (d├╣ng cho Termux/iSH)</p>
+        </div>
+      </div>
+
+      <button class="btn-big" id="btn-activate" onclick="activate()">ΓÜí K├¡ch hoß║ít ngay</button>
+      <div class="result" id="activate-result"></div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-bar">
+      ≡ƒÆ¼ Mua g├│i Tuß║ºn/Th├íng li├¬n hß╗ç: <strong>beterHa90</strong><br>
+      <span style="font-size:12px; color:#555;">Zalo / Facebook / Telegram</span>
+    </div>
+  </div>
+
+    <!-- Cloud Shell Terminal -->
+    <div class="card" id="shell-section">
+      <h2>≡ƒÆ╗ Cloud Shell Terminal</h2>
+      <p class="sub">Chß║íy tool trß╗▒c tiß║┐p tr├¬n tr├¼nh duyß╗çt ΓÇö kh├┤ng cß║ºn c├ái ─æß║╖t!</p>
+
+      <div id="shell-closed">
+        <div class="terminal-preview">
+          <div class="term-bar">
+            <span class="term-dot red"></span>
+            <span class="term-dot yellow"></span>
+            <span class="term-dot green"></span>
+            <span class="term-title">Cloud Shell</span>
+          </div>
+          <div class="term-body">
+            <div class="term-line"><span class="term-prompt">$</span> git clone FlowbornPosterTool</div>
+            <div class="term-line dim">Cloning into 'FlowbornPosterTool'... done.</div>
+            <div class="term-line"><span class="term-prompt">$</span> sh r</div>
+            <div class="term-line dim">Installing requests, Pillow...</div>
+            <div class="term-line" style="color:#00f5a0">Γ£ô Flowborn Poster Tool v1.0 ready!</div>
+            <div class="term-line"><span class="term-cursor">Γûï</span></div>
+          </div>
+        </div>
+
+        <div class="shell-steps">
+          <div class="shell-step">
+            <span class="shell-num">1</span>
+            <span>Nhß║Ñn n├║t b├¬n d╞░ß╗¢i ─æß╗â mß╗ƒ Cloud Shell</span>
+          </div>
+          <div class="shell-step">
+            <span class="shell-num">2</span>
+            <span>Upload file <code>.har</code> (n├║t Γï« ΓåÆ Upload)</span>
+          </div>
+          <div class="shell-step">
+            <span class="shell-num">3</span>
+            <span>G├╡ <code>sh r</code> ─æß╗â chß║íy tool</span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+          <button class="btn-big" onclick="openShellNewTab()" style="flex:1; min-width:200px">
+            Γÿü∩╕Å Mß╗ƒ Google Cloud Shell
+          </button>
+          <button class="btn-big" onclick="openBinderNewTab()" style="flex:1; min-width:200px; background:#1e1e2e; color:#00d9f5;">
+            ≡ƒö¼ Mß╗ƒ Binder Terminal
+          </button>
+        </div>
+        <p class="hint" style="text-align:center; margin-top:8px">
+          Cloud Shell: nhanh h╞ín (cß║ºn Gmail) ┬╖ Binder: kh├┤ng cß║ºn t├ái khoß║ún (chß║¡m h╞ín lß║ºn ─æß║ºu)
+        </p>
+
+        <div class="shell-tips" style="margin-top:16px">
+          <span>≡ƒôï Copy lß╗çnh (paste v├áo terminal):</span>
+          <button class="chip" onclick="copyCmd('sh r')">sh r</button>
+          <button class="chip" onclick="copyCmd('python3 web_login.py')">web_login</button>
+          <button class="chip" onclick="copyCmd('ls *.har')">ls *.har</button>
+          <button class="chip" onclick="copyCmd('mv ~/ten_file.har .')">mv .har</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-bar">
+      ≡ƒÆ¼ Mua g├│i Tuß║ºn/Th├íng li├¬n hß╗ç: <strong>beterHa90</strong><br>
+      <span style="font-size:12px; color:#555;">Zalo / Facebook / Telegram</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://github.com/longbmtgithub/FlowbornPosterTool">GitHub</a> ┬╖ ┬⌐ 2025 beterHa90
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Force reload if outdated cache
+const APP_VERSION = '1.5.0';
+if (!window.location.search.includes('v=' + APP_VERSION)) {
+  window.location.replace(window.location.pathname + '?v=' + APP_VERSION + '&t=' + Date.now());
+}
+const _RAW = 'https://gist.githubusercontent.com/longbmtgithub/a104c4c7c27608d9420e7ce94578b56c/raw/licenses.json';
+
+let DATA = {};
+let currentUser = null;
+let selectedPlan = 'week';
+let activationMode = 'account';
+let _lastFetch = 0;
+const _CACHE_TTL = 10000; // 10 seconds cache
+
+const PLANS = {
+  trial: { max: 3, days: 1, name: 'Dung thu', auto: true },
+  week:  { max: 999, days: 7, name: 'Goi Tuan', auto: false },
+  month: { max: 9999, days: 30, name: 'Goi Thang', auto: false }
+};
+
+// === LOADING ===
+function showLoading(msg) {
+  const el = document.getElementById('loading-overlay');
+  if (el) { el.querySelector('.loading-text').textContent = msg || 'Đang xử lý...'; el.classList.add('show'); }
+}
+function hideLoading() {
+  const el = document.getElementById('loading-overlay');
+  if (el) el.classList.remove('show');
+}
+
+// === UTILS ===
+function toast(msg, ok=true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (ok ? 'toast-ok' : 'toast-err');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function getExpiry(days) {
+  const d = new Date(); d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+}
+
+// === DATA API (READ-ONLY with cache) ===
+async function fetchData(force) {
+  const now = Date.now();
+  if (!force && _lastFetch && (now - _lastFetch < _CACHE_TTL) && Object.keys(DATA).length > 0) {
+    return DATA; // Use cache
+  }
+  const r = await fetch(_RAW + '?t=' + now);
+  if (!r.ok) throw new Error('API error');
+  DATA = await r.json();
+  if (!DATA.licenses) DATA.licenses = {};
+  if (!DATA.accounts) DATA.accounts = {};
+  _lastFetch = now;
+  return DATA;
+}
+
+// === AUTH ===
+function showAuth(tab) {
+  document.getElementById('auth-section').style.display = 'block';
+  document.getElementById('main-section').style.display = 'none';
+  switchTab(tab);
+}
+
+function switchTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('auth-result').style.display = 'none';
+}
+
+async function doLogin() {
+  const user = document.getElementById('login-user').value.trim().toLowerCase();
+  const pass = document.getElementById('login-pass').value;
+  if (!user || !pass) return toast('Nhß║¡p ─æß║ºy ─æß╗º th├┤ng tin!', false);
+
+  try {
+    await fetchData();
+    const acc = DATA.accounts[user];
+    if (!acc) return showAuthError('T├ái khoß║ún kh├┤ng tß╗ôn tß║íi!');
+
+    const hash = await sha256(pass + '_fp_salt_' + user);
+    if (hash !== acc.pass) return showAuthError('Sai mß║¡t khß║⌐u!');
+
+    currentUser = user;
+    localStorage.setItem('fp_user', user);
+    localStorage.setItem('fp_hash', hash);
+    onLoggedIn();
+    toast('─É─âng nhß║¡p th├ánh c├┤ng!');
+  } catch (e) {
+    showAuthError('Lß╗ùi kß║┐t nß╗æi: ' + e.message);
+  }
+}
+
+async function doRegister() {
+  // Registration disabled on client ΓÇö admin creates accounts
+  const r = document.getElementById('auth-result');
+  r.style.display = 'block';
+  r.className = 'result success';
+  r.innerHTML = `<div class="icon">≡ƒôï</div><h3>─É─âng k├╜ t├ái khoß║ún</h3><p>Li├¬n hß╗ç <strong>beterHa90</strong> (Zalo/Facebook/Telegram) ─æß╗â ─æ╞░ß╗úc tß║ío t├ái khoß║ún.<br><br>Gß╗¡i k├¿m:<br>ΓÇó T├¬n ─æ─âng nhß║¡p mong muß╗æn<br>ΓÇó G├│i muß╗æn mua (Tuß║ºn 30K / Th├íng 80K)</p>`;
+  toast('Li├¬n hß╗ç beterHa90 ─æß╗â ─æ─âng k├╜!', true);
+}
+
+function showAuthError(msg) {
+  const r = document.getElementById('auth-result');
+  r.style.display = 'block';
+  r.className = 'result error';
+  r.innerHTML = `<div class="icon">Γ¥î</div><h3>${msg}</h3>`;
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('fp_user');
+  localStorage.removeItem('fp_hash');
+  document.getElementById('nav-guest').style.display = 'flex';
+  document.getElementById('nav-user').style.display = 'none';
+  document.getElementById('auth-section').style.display = 'none';
+  document.getElementById('main-section').style.display = 'none';
+  showAuth('login');
+}
+
+async function onLoggedIn() {
+  const acc = DATA.accounts[currentUser];
+  
+  // Block pending accounts
+  if (acc && acc.status === 'pending') {
+    showAuthError('ΓÅ│ T├ái khoß║ún ─æang chß╗¥ admin duyß╗çt!\nLi├¬n hß╗ç beterHa90 ─æß╗â ─æ╞░ß╗úc duyß╗çt.');
+    currentUser = null;
+    localStorage.removeItem('fp_user');
+    return;
+  }
+
+  document.getElementById('nav-guest').style.display = 'none';
+  document.getElementById('nav-user').style.display = 'flex';
+  document.getElementById('auth-section').style.display = 'none';
+  document.getElementById('main-section').style.display = 'block';
+
+  const displayName = acc ? (acc.name || currentUser) : currentUser;
+  document.getElementById('nav-avatar').textContent = displayName[0].toUpperCase();
+  document.getElementById('nav-uname').textContent = displayName;
+  document.getElementById('acc-username').value = currentUser;
+
+  renderAccountStatus();
+  renderMyLicenses();
+}
+
+function renderAccountStatus() {
+  const acc = DATA.accounts[currentUser] || {};
+  const status = acc.status || 'approved';
+  const isApproved = status === 'approved';
+  const displayName = acc.name || currentUser;
+  const created = acc.created || '-';
+
+  // Web license info
+  const wl = (DATA.web_licenses || {})[currentUser];
+  const hasLic = !!wl;
+  let licMax = '-', licExp = '-', licStatus = 'Ch╞░a k├¡ch hoß║ít';
+  if (wl) {
+    licMax = wl.max || 0;
+    licExp = wl.expires || 'V─⌐nh viß╗àn';
+    const isExpired = wl.expires && new Date() > new Date(wl.expires + 'T23:59:59');
+    licStatus = isExpired ? 'ΓÅ░ Hß║┐t hß║ín' : (licMax === 0 ? 'ΓÅ│ Chß╗¥ TT' : 'Γ£à Hoß║ít ─æß╗Öng');
+  }
+
+  const el = document.getElementById('acc-status-content');
+  el.innerHTML = `
+    <div class="acc-status">
+      <div class="avatar ${isApproved ? 'approved' : 'pending'}">${displayName[0].toUpperCase()}</div>
+      <div class="info">
+        <div class="username">${displayName} <span style="color:#666;font-size:13px;font-weight:400">@${currentUser}</span></div>
+        <div class="meta">Ng├áy tß║ío: ${created}</div>
+      </div>
+      <span class="badge ${isApproved ? 'approved' : 'pending'}">${isApproved ? 'Γ£à ─É├ú duyß╗çt' : 'ΓÅ│ Chß╗¥ duyß╗çt'}</span>
+    </div>
+    <div class="acc-stats">
+      <div class="acc-stat">
+        <div class="val">${isApproved ? '≡ƒƒó' : '≡ƒƒí'}</div>
+        <div class="lbl">Trß║íng th├íi TK</div>
+      </div>
+      <div class="acc-stat">
+        <div class="val" style="color:${hasLic ? '#00f5a0' : '#666'}">${hasLic ? licMax : '-'}</div>
+        <div class="lbl">L╞░ß╗út c├▓n lß║íi</div>
+      </div>
+      <div class="acc-stat">
+        <div class="val" style="font-size:14px;color:${hasLic ? '#00d9f5' : '#666'}">${licExp}</div>
+        <div class="lbl">Hß║ín sß╗¡ dß╗Ñng</div>
+      </div>
+    </div>
+  `;
+}
+
+// === LICENSES ===
+function renderMyLicenses() {
+  const acc = DATA.accounts[currentUser];
+  const devices = acc ? (acc.devices || []) : [];
+  const container = document.getElementById('my-licenses');
+
+  if (!devices.length) {
+    container.innerHTML = '<div class="empty-lic">Ch╞░a c├│ license n├áo. K├¡ch hoß║ít b├¬n d╞░ß╗¢i!</div>';
+    return;
+  }
+
+  container.innerHTML = devices.map(did => {
+    const lic = DATA.licenses[did];
+    if (!lic) return `<div class="lic-item">
+      <div><div class="did">${did}</div><div class="info">Kh├┤ng t├¼m thß║Ñy license</div></div>
+      <span class="tag tag-expired">N/A</span>
+    </div>`;
+
+    const max = lic.max || 0;
+    const exp = lic.expires || '-';
+    const name = lic.name || '';
+    let status = 'Active', cls = 'tag-active';
+    if (exp !== '-' && new Date() > new Date(exp + 'T23:59:59')) { status = 'Hß║┐t hß║ín'; cls = 'tag-expired'; }
+    if (name.includes('[CHO THANH TOAN]')) { status = 'Chß╗¥ TT'; cls = 'tag-pending'; }
+
+    return `<div class="lic-item">
+      <div>
+        <div class="did">${did}</div>
+        <div class="info">${max} l╞░ß╗út ┬╖ Hß║ín: ${exp}</div>
+      </div>
+      <span class="tag ${cls}">${status}</span>
+    </div>`;
+  }).join('');
+}
+
+function setMode(mode) {
+  activationMode = mode;
+  document.getElementById('mode-acc').classList.toggle('active', mode === 'account');
+  document.getElementById('mode-dev').classList.toggle('active', mode === 'device');
+  document.getElementById('input-account').style.display = mode === 'account' ? 'block' : 'none';
+  document.getElementById('input-device').style.display = mode === 'device' ? 'block' : 'none';
+}
+
+function selectPlan(el) {
+  document.querySelectorAll('.plan').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPlan = el.dataset.plan;
+  const btn = document.getElementById('btn-activate');
+  btn.textContent = selectedPlan === 'trial' ? 'ΓÜí K├¡ch hoß║ít miß╗àn ph├¡' : '≡ƒôï ─É─âng k├╜ & Li├¬n hß╗ç thanh to├ín';
+}
+
+async function activate() {
+  const plan = PLANS[selectedPlan];
+  const btn = document.getElementById('btn-activate');
+  const origText = btn.textContent;
+  let key, isAccount = (activationMode === 'account');
+
+  if (isAccount) {
+    if (!currentUser) return toast('─É─âng nhß║¡p tr╞░ß╗¢c!', false);
+    key = currentUser;
+  } else {
+    key = document.getElementById('device-id').value.trim();
+    if (!key) return toast('Nhập mã thiết bị!', false);
+    if (key.length < 8) return toast('Mã thiết bị không hợp lệ!', false);
+  }
+
+  btn.disabled = true; btn.textContent = 'Đang xử lý...';
+  showLoading('Đang kiểm tra license...');
+
+  try {
+    await fetchData(true);
+
+    // Block free trial if already used (check FIRST)
+    if (plan.auto) {
+      if (!DATA.used_trials) DATA.used_trials = [];
+      const trialKey = isAccount ? `acc:${key}` : `dev:${key}`;
+      if (DATA.used_trials.includes(trialKey)) {
+        showActivateResult('error', '≡ƒÜ½', '─É├ú hß║┐t l╞░ß╗út d├╣ng thß╗¡!',
+          'Mß╗ùi t├ái khoß║ún/thiß║┐t bß╗ï chß╗ë ─æ╞░ß╗úc d├╣ng thß╗¡ 1 lß║ºn.<br>Li├¬n hß╗ç <strong>beterHa90</strong> ─æß╗â mua g├│i Tuß║ºn/Th├íng.', key, null, isAccount);
+        btn.disabled = false; btn.textContent = origText;
+        return;
+      }
+    }
+
+    // Check existing license
+    const store = isAccount ? (DATA.web_licenses || {}) : (DATA.licenses || {});
+    // Also check wildcard free key
+    const lic = store[key] || store['*'];
+
+    if (lic) {
+      const isExpired = lic.expires && new Date() > new Date(lic.expires + 'T23:59:59');
+      const isPending = lic.name && lic.name.includes('[CHO THANH TOAN]');
+      if (isExpired || lic.max === 0) {
+        showActivateResult('error', 'ΓÅ░', 'License ─æ├ú hß║┐t hß║ín!',
+          'Li├¬n hß╗ç <strong>beterHa90</strong> ─æß╗â gia hß║ín hoß║╖c mua g├│i mß╗¢i.', key, lic, isAccount);
+      } else if (isPending) {
+        showActivateResult('error', 'ΓÅ│', 'Chß╗¥ thanh to├ín!',
+          'Li├¬n hß╗ç <strong>beterHa90</strong> ─æß╗â ho├án tß║Ñt thanh to├ín.', key, lic, isAccount);
+      } else {
+        showActivateResult('success', 'Γ£à', isAccount ? 'T├ái khoß║ún ─æang hoß║ít ─æß╗Öng!' : 'Thiß║┐t bß╗ï ─æang hoß║ít ─æß╗Öng!',
+          'License hß╗úp lß╗ç.', key, lic, isAccount);
+      }
+    } else {
+      // No license found ΓÇö show contact
+      showActivateResult('error', '≡ƒöÆ', 'Ch╞░a c├│ license!',
+        'Li├¬n hß╗ç <strong>beterHa90</strong> (Zalo/Facebook/Telegram) ─æß╗â mua g├│i:<br><br>ΓÇó G├│i Tuß║ºn: <strong>30K</strong> (999 l╞░ß╗út, 7 ng├áy)<br>ΓÇó G├│i Th├íng: <strong>80K</strong> (Kh├┤ng giß╗¢i hß║ín, 30 ng├áy)', key, null, isAccount);
+    }
+
+    renderAccountStatus();
+  } catch (e) {
+    showActivateResult('error', 'Γ¥î', 'Lß╗ùi', e.message, '', null, false);
+    toast(e.message, false);
+  }
+
+  hideLoading();
+  btn.disabled = false; btn.textContent = origText;
+}
+
+function showActivateResult(type, icon, title, desc, key, lic, isAccount) {
+  const r = document.getElementById('activate-result');
+  r.style.display = 'block';
+  r.className = `result ${type}`;
+  let info = '';
+  if (lic) {
+    const label = isAccount ? 'T├ái khoß║ún' : 'Device ID';
+    info = `<div class="key-info">
+      <div class="row"><span class="label">${label}</span><span class="value">${key}</span></div>
+      <div class="row"><span class="label">Sß╗æ l╞░ß╗út</span><span class="value">${lic.max || '?'}</span></div>
+      <div class="row"><span class="label">Hß║┐t hß║ín</span><span class="value">${lic.expires || '-'}</span></div>
+    </div>`;
+  }
+  r.innerHTML = `<div class="icon">${icon}</div><h3>${title}</h3><p>${desc}</p>${info}`;
+}
+
+// === AUTO LOGIN ===
+window.addEventListener('DOMContentLoaded', async () => {
+  const savedUser = localStorage.getItem('fp_user');
+  const savedHash = localStorage.getItem('fp_hash');
+  if (savedUser && savedHash) {
+    try {
+      await fetchData();
+      const acc = DATA.accounts[savedUser];
+      if (acc && acc.pass === savedHash) {
+        currentUser = savedUser;
+        onLoggedIn();
+        return;
+      }
+    } catch (e) {}
+    localStorage.removeItem('fp_user');
+    localStorage.removeItem('fp_hash');
+  }
+  showAuth('login');
+});
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('form-login').style.display !== 'none'
+        && document.getElementById('auth-section').style.display !== 'none') doLogin();
+    else if (document.getElementById('form-register').style.display !== 'none'
+        && document.getElementById('auth-section').style.display !== 'none') doRegister();
+  }
+});
+
+selectPlan(document.querySelector('.plan.selected'));
+
+// === TERMINAL ===
+const SHELL_URL = 'https://shell.cloud.google.com/cloudshell/open?git_repo=https://github.com/longbmtgithub/FlowbornPosterTool&shellonly=true';
+const BINDER_URL = 'https://mybinder.org/v2/gh/longbmtgithub/FlowbornPosterTool/main?urlpath=terminals/1';
+
+function openBinder() {
+  document.getElementById('shell-closed').style.display = 'none';
+  document.getElementById('shell-embed').style.display = 'block';
+  document.getElementById('binder-iframe').src = BINDER_URL;
+  document.getElementById('shell-status').textContent = 'ΓÅ│ ─Éang khß╗ƒi tß║ío (30-60 gi├óy)...';
+  toast('Terminal ─æang khß╗ƒi tß║ío...');
+  
+  // Update status after delay
+  setTimeout(() => {
+    const s = document.getElementById('shell-status');
+    if (s) s.textContent = 'ΓùÅ Connected';
+  }, 45000);
+}
+
+function openBinderNewTab() {
+  window.open(BINDER_URL, '_blank');
+}
+
+function openShellNewTab() {
+  window.open(SHELL_URL, '_blank');
+}
+
+function closeEmbed() {
+  document.getElementById('binder-iframe').src = '';
+  document.getElementById('shell-embed').style.display = 'none';
+  document.getElementById('shell-closed').style.display = 'block';
+}
+
+function copyCmd(cmd) {
+  navigator.clipboard.writeText(cmd).then(() => {
+    toast('─É├ú copy: ' + cmd);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = cmd; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('─É├ú copy: ' + cmd);
+  });
+}
+</script>
+</body>
+</html>

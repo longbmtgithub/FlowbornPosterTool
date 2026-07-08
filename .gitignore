@@ -6,6 +6,7 @@ flowborn_poster_src.py
 loadtran_src.py
 *_src.py
 license_header.txt
+v2.py
 
 # Build artifacts
 *.zip
@@ -16,6 +17,12 @@ tmp*.py
 .bot_admins.json
 .env
 *.har
+
+# Admin / backend (NEVER push to public repo)
+index.html
+api_server/
+backend/
+proxy/
 
 # Platform specific
 sample/
@@ -28,3 +35,10 @@ setup_cloud.sh
 
 # Obfuscator tools
 obfuscate*.py
+build_*.py
+fix_*.py
+
+# Temp / extracted folders
+KGVNPosterTools_v3.0_Termux/
+KGVNPosterTools_v3.0_Web/
+KGVNPosterTools_v3.0_iSH/

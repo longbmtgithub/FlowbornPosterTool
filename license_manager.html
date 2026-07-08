@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowborn License Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0a0a14 0%, #0d1117 50%, #0a0f1a 100%);
+  color: #e6edf3; min-height: 100vh; padding: 20px;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* Header */
+h1 {
+  text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 6px;
+  background: linear-gradient(90deg, #00f5a0, #00d9f5);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+h1::before { content: "🛡️ "; -webkit-text-fill-color: initial; }
+.subtitle { text-align: center; color: #8b949e; margin-bottom: 24px; font-size: 14px; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+.stat-card {
+  background: rgba(22, 27, 34, 0.8); border: 1px solid #30363d; border-radius: 12px;
+  padding: 16px; text-align: center;
+}
+.stat-card .num { font-size: 32px; font-weight: 800; color: #00f5a0; }
+.stat-card .label { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+.stat-card .sub { font-size: 11px; color: #58a6ff; margin-top: 2px; }
+
+/* Tabs */
+.tabs { display: flex; border-bottom: 2px solid #21262d; margin-bottom: 20px; }
+.tab {
+  flex: 1; padding: 12px; text-align: center; cursor: pointer; font-weight: 600;
+  color: #8b949e; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: 0.2s;
+}
+.tab:hover { color: #e6edf3; }
+.tab.active { color: #00f5a0; border-bottom-color: #00f5a0; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 10px 14px; color: #8b949e; font-size: 11px;
+  text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #21262d;
+}
+td {
+  padding: 12px 14px; border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+  font-size: 14px; vertical-align: middle;
+}
+tr:hover td { background: rgba(0, 245, 160, 0.03); }
+
+/* Badges */
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;
+}
+.badge.active { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+.badge.expired { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+.badge.pending { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+/* Buttons */
+.btn {
+  padding: 5px 14px; border: none; border-radius: 6px; cursor: pointer;
+  font-size: 12px; font-weight: 600; transition: 0.2s;
+}
+.btn-edit { background: rgba(59, 130, 246, 0.2); color: #58a6ff; }
+.btn-edit:hover { background: rgba(59, 130, 246, 0.4); }
+.btn-del { background: rgba(239, 68, 68, 0.2); color: #f87171; margin-left: 4px; }
+.btn-del:hover { background: rgba(239, 68, 68, 0.4); }
+.btn-add {
+  background: linear-gradient(90deg, #00f5a0, #00d9f5); color: #0a0a14;
+  padding: 8px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer;
+  font-size: 14px;
+}
+.btn-add:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-logout {
+  background: rgba(48, 54, 61, 0.8); color: #8b949e; padding: 8px 16px;
+  border-radius: 8px; border: 1px solid #30363d; cursor: pointer; font-size: 13px;
+}
+.btn-logout:hover { color: #e6edf3; border-color: #484f58; }
+
+.toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+
+/* Usage bar */
+.usage-bar {
+  width: 80px; height: 6px; background: #21262d; border-radius: 3px; display: inline-block;
+  vertical-align: middle; margin-right: 6px;
+}
+.usage-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.usage-text { font-size: 12px; color: #8b949e; }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7); z-index: 100; justify-content: center; align-items: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: #161b22; border: 1px solid #30363d; border-radius: 16px; padding: 24px;
+  width: 420px; max-width: 90vw;
+}
+.modal h3 { margin-bottom: 16px; color: #00f5a0; }
+.modal label { display: block; color: #8b949e; font-size: 12px; margin-bottom: 4px; margin-top: 12px; }
+.modal input, .modal select {
+  width: 100%; padding: 8px 12px; background: #0d1117; border: 1px solid #30363d;
+  border-radius: 8px; color: #e6edf3; font-size: 14px; outline: none;
+}
+.modal input:focus { border-color: #00f5a0; }
+.modal-btns { margin-top: 20px; display: flex; gap: 8px; justify-content: flex-end; }
+.modal-btns .btn { padding: 8px 20px; font-size: 14px; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 20px; right: 20px; background: #161b22; border: 1px solid #00f5a0;
+  color: #00f5a0; padding: 10px 20px; border-radius: 8px; font-size: 13px; z-index: 200;
+  animation: fadeIn 0.3s;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+@keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+
+/* Login */
+.login-box {
+  max-width: 380px; margin: 100px auto; background: rgba(22,27,34,0.9);
+  border: 1px solid #30363d; border-radius: 16px; padding: 32px;
+}
+.login-box h2 { text-align: center; margin-bottom: 20px; color: #00f5a0; }
+.login-box input {
+  width: 100%; padding: 10px 14px; background: #0d1117; border: 1px solid #30363d;
+  border-radius: 8px; color: #e6edf3; font-size: 14px; margin-bottom: 12px; outline: none;
+}
+.login-box button {
+  width: 100%; padding: 10px; background: #00f5a0; color: #0a0a14; border: none;
+  border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-section">
+  <div class="login-box">
+    <h2>🔐 Admin Login</h2>
+    <input id="admin-pass" type="password" placeholder="Admin password" onkeydown="if(event.key==='Enter')doAdminLogin()">
+    <button onclick="doAdminLogin()">Đăng nhập</button>
+    <p id="login-err" style="color:#ef4444;font-size:13px;margin-top:8px;text-align:center"></p>
+  </div>
+</div>
+
+<!-- Main -->
+<div id="main-section" style="display:none" class="container">
+  <h1>Flowborn License Manager</h1>
+  <p class="subtitle">Quản lý license & tài khoản</p>
+
+  <div class="stats" id="stats-row"></div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('licenses')">🔑 License / Device</div>
+    <div class="tab" onclick="switchTab('accounts')">👤 Tài khoản</div>
+    <div class="tab" onclick="switchTab('usage')">📊 Sử dụng</div>
+  </div>
+
+  <!-- License tab -->
+  <div id="tab-licenses" class="tab-content active">
+    <div class="toolbar">
+      <button class="btn-add" onclick="showModal('license')">+ Thêm license</button>
+      <button class="btn-logout" onclick="location.reload()">Đăng xuất</button>
+    </div>
+    <table><thead><tr>
+      <th>DEVICE ID</th><th>TÊN</th><th>SỐ LƯỢT</th><th>HẾT HẠN</th><th>TRẠNG THÁI</th><th></th>
+    </tr></thead><tbody id="lic-body"></tbody></table>
+  </div>
+
+  <!-- Accounts tab -->
+  <div id="tab-accounts" class="tab-content">
+    <div class="toolbar">
+      <button class="btn-add" onclick="showModal('account')">+ Thêm tài khoản</button>
+      <button class="btn-logout" onclick="location.reload()">Đăng xuất</button>
+    </div>
+    <table><thead><tr>
+      <th>USERNAME</th><th>TÊN</th><th>NGÀY TẠO</th><th>ĐÃ DÙNG</th><th>TRẠNG THÁI</th><th></th>
+    </tr></thead><tbody id="acc-body"></tbody></table>
+  </div>
+
+  <!-- Usage tab -->
+  <div id="tab-usage" class="tab-content">
+    <div class="toolbar">
+      <h3 style="color:#00f5a0;margin:0">🟢 Đang hoạt động (Real-time)</h3>
+      <button class="btn-logout" onclick="location.reload()">Đăng xuất</button>
+    </div>
+    <table style="margin-bottom: 30px;"><thead><tr>
+      <th>ID THIẾT BỊ / USERNAME</th><th>TÊN KEY / TÀI KHOẢN</th><th>CÔNG CỤ</th><th>PING CUỐI</th>
+    </tr></thead><tbody id="active-sessions-body"></tbody></table>
+
+    <div class="toolbar">
+      <h3 style="color:#8b949e;margin:0">🕒 Lịch sử dùng thử / free key</h3>
+    </div>
+    <table><thead><tr>
+      <th>LOẠI</th><th>ID / TÀI KHOẢN</th><th>THỜI GIAN</th>
+    </tr></thead><tbody id="usage-body"></tbody></table>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-box"></div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+const GIST_ID = 'a104c4c7c27608d9420e7ce94578b56c';
+let TOKEN = '';
+let DATA = {};
+
+// ====== AUTH ======
+async function doAdminLogin() {
+  const pass = document.getElementById('admin-pass').value.trim();
+  if (!pass) return;
+  TOKEN = pass;
+  try {
+    const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: { 'Authorization': `token ${TOKEN}` }
+    });
+    if (r.status !== 200) throw new Error('Token sai hoặc hết hạn');
+    const gist = await r.json();
+    DATA = JSON.parse(gist.files['licenses.json'].content);
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('main-section').style.display = 'block';
+    renderAll();
+  } catch (e) {
+    document.getElementById('login-err').textContent = '❌ ' + e.message;
+  }
+}
+
+async function sha256(msg) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// ====== SAVE ======
+async function saveData() {
+  const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+    method: 'PATCH',
+    headers: { 'Authorization': `token ${TOKEN}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ files: { 'licenses.json': { content: JSON.stringify(DATA, null, 2) } } })
+  });
+  return r.status === 200;
+}
+
+// ====== RENDER ======
+function renderAll() {
+  renderStats();
+  renderLicenses();
+  renderAccounts();
+  renderUsage();
+}
+
+function renderStats() {
+  const lics = DATA.licenses || {};
+  const accs = DATA.accounts || {};
+  const total = Object.keys(lics).length;
+  const active = Object.values(lics).filter(l => {
+    if (!l.expires) return true;
+    return new Date(l.expires) >= new Date(new Date().toISOString().split('T')[0]);
+  }).length;
+  const accCount = Object.keys(accs).length;
+  const freeKey = lics['*'];
+  const freeUsers = (DATA.free_users || []).length;
+  const maxFree = (DATA.max_devices || 12);
+
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card"><div class="num">${total}</div><div class="label">LICENSE</div></div>
+    <div class="stat-card"><div class="num">${active}</div><div class="label">ACTIVE</div></div>
+    <div class="stat-card"><div class="num">${accCount}</div><div class="label">TÀI KHOẢN</div></div>
+    <div class="stat-card">
+      <div class="num">${freeKey ? 'Có' : 'Không'}</div><div class="label">FREE KEY</div>
+      ${freeKey ? `<div class="sub">📦 ${freeKey.max} lượt | 👥 ${freeUsers}/${maxFree} TB</div>` : ''}
+    </div>
+  `;
+}
+
+function renderLicenses() {
+  const lics = DATA.licenses || {};
+  const today = new Date().toISOString().split('T')[0];
+  let html = '';
+  for (const [did, info] of Object.entries(lics)) {
+    const name = info.name || '';
+    const max = info.max || '?';
+    const exp = info.expires || '∞';
+    const isExpired = info.expires && info.expires < today;
+    const badge = isExpired ? '<span class="badge expired">Expired</span>' : '<span class="badge active">Active</span>';
+    html += `<tr>
+      <td><code style="color:#58a6ff">${did}</code></td>
+      <td>${name}</td>
+      <td>${max}</td>
+      <td>${exp}</td>
+      <td>${badge}</td>
+      <td>
+        <button class="btn btn-edit" onclick="editLicense('${did}')">Sửa</button>
+        <button class="btn btn-del" onclick="delLicense('${did}')">Xóa</button>
+      </td>
+    </tr>`;
+  }
+  document.getElementById('lic-body').innerHTML = html || '<tr><td colspan="6" style="color:#8b949e;text-align:center">Trống</td></tr>';
+}
+
+function renderAccounts() {
+  const accs = DATA.accounts || {};
+  const usedTrials = DATA.used_trials || [];
+  const freeUsers = DATA.free_users || [];
+  let html = '';
+  for (const [user, info] of Object.entries(accs)) {
+    const name = info.name || '';
+    const created = info.created || '-';
+    const status = info.status === 'approved' ? '<span class="badge active">Active</span>'
+                 : '<span class="badge pending">Pending</span>';
+
+    // Count usage: check used_trials for acc:username entries
+    const accTrialKey = 'acc:' + user;
+    const usageCount = usedTrials.filter(t => t === accTrialKey).length;
+
+    // Check device usage from free_users
+    const devices = info.devices || [];
+    let deviceUsage = 0;
+    devices.forEach(d => {
+      deviceUsage += freeUsers.filter(f => f.startsWith(d + '|')).length;
+    });
+
+    const totalUsage = usageCount + deviceUsage;
+    const usageHtml = totalUsage > 0
+      ? `<span style="color:#00f5a0;font-weight:600">${totalUsage} lượt</span>`
+      : `<span style="color:#8b949e">0</span>`;
+
+    html += `<tr>
+      <td><code style="color:#f0883e">${user}</code></td>
+      <td><strong>${name}</strong></td>
+      <td>${created}</td>
+      <td>${usageHtml}</td>
+      <td>${status}</td>
+      <td>
+        <button class="btn btn-edit" onclick="editAccount('${user}')">Sửa</button>
+        <button class="btn btn-del" onclick="delAccount('${user}')">Xóa</button>
+      </td>
+    </tr>`;
+  }
+  document.getElementById('acc-body').innerHTML = html || '<tr><td colspan="6" style="color:#8b949e;text-align:center">Trống</td></tr>';
+}
+
+function renderUsage() {
+  const usedTrials = DATA.used_trials || [];
+  const freeUsers = DATA.free_users || [];
+  let html = '';
+
+  // Account usage
+  usedTrials.forEach(t => {
+    const type = t.startsWith('acc:') ? '👤 Tài khoản' : '📱 Thiết bị';
+    const id = t.startsWith('acc:') ? t.substring(4) : t.startsWith('dev:') ? t.substring(4) : t;
+    html += `<tr><td>${type}</td><td><code>${id}</code></td><td>-</td></tr>`;
+  });
+
+  // Device usage with timestamps
+  freeUsers.forEach(f => {
+    const parts = f.split('|');
+    const did = parts[0] || f;
+    const time = parts[1] || '-';
+    html += `<tr><td>📱 Free trial</td><td><code>${did}</code></td><td>${time}</td></tr>`;
+  });
+
+  document.getElementById('usage-body').innerHTML = html || '<tr><td colspan="3" style="color:#8b949e;text-align:center">Chưa có dữ liệu</td></tr>';
+}
+
+let activeSessionsInterval = null;
+
+async function fetchActiveSessions() {
+  try {
+    const r = await fetch('https://flowbron-bot.onrender.com/active_sessions');
+    if (!r.ok) return;
+    const sessions = await r.json();
+    renderActiveSessions(sessions);
+  } catch (e) {
+    console.error('Error fetching active sessions:', e);
+  }
+}
+
+function renderActiveSessions(sessions) {
+  let html = '';
+  const now = Math.floor(Date.now() / 1000);
+  for (const [did, info] of Object.entries(sessions)) {
+    const elapsed = now - Math.floor(info.ts);
+    let timeStr = elapsed < 60 ? 'Vừa xong' : `${Math.floor(elapsed / 60)} phút trước`;
+    const typeLabel = info.type === 'loadtran' ? 'Load Tran' : 'Flowborn';
+    
+    html += `<tr>
+      <td><span style="color:#00f5a0;animation: pulse 1.5s infinite">●</span> <code>${did}</code></td>
+      <td><strong>${info.name || 'Device'}</strong></td>
+      <td><span class="badge active" style="background:rgba(0,245,160,0.1);color:#00f5a0">${typeLabel}</span></td>
+      <td>${timeStr}</td>
+    </tr>`;
+  }
+  document.getElementById('active-sessions-body').innerHTML = html || '<tr><td colspan="4" style="color:#8b949e;text-align:center">Không có thiết bị nào đang hoạt động</td></tr>';
+}
+
+// ====== TABS ======
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['licenses','accounts','usage'][i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  
+  if (name === 'usage') {
+    fetchActiveSessions();
+    if (!activeSessionsInterval) {
+      activeSessionsInterval = setInterval(fetchActiveSessions, 5000);
+    }
+  } else {
+    if (activeSessionsInterval) {
+      clearInterval(activeSessionsInterval);
+      activeSessionsInterval = null;
+    }
+  }
+}
+
+// ====== MODAL ======
+function showModal(type, editData) {
+  const m = document.getElementById('modal-box');
+  if (type === 'license') {
+    const d = editData || {};
+    m.innerHTML = `
+      <h3>${editData ? 'Sửa License' : '+ Thêm License'}</h3>
+      <label>Device ID</label>
+      <input id="m-did" value="${d.did || ''}" ${editData ? 'readonly style="opacity:0.6"' : ''} placeholder="Nhập device ID">
+      <label>Tên / Ghi chú</label>
+      <input id="m-name" value="${d.name || ''}" placeholder="VD: khách hàng A">
+      <label>Số lượt tối đa</label>
+      <input id="m-max" type="number" value="${d.max || 999}" placeholder="999">
+      <label>Hết hạn (YYYY-MM-DD)</label>
+      <input id="m-exp" type="date" value="${d.expires || ''}">
+      <div class="modal-btns">
+        <button class="btn btn-logout" onclick="closeModal()">Hủy</button>
+        <button class="btn-add" onclick="saveLicense('${d.did || ''}')">Lưu</button>
+      </div>
+    `;
+  } else if (type === 'account') {
+    const d = editData || {};
+    m.innerHTML = `
+      <h3>${editData ? 'Sửa Tài khoản' : '+ Thêm Tài khoản'}</h3>
+      <label>Username</label>
+      <input id="m-user" value="${d.user || ''}" ${editData ? 'readonly style="opacity:0.6"' : ''} placeholder="username">
+      <label>Tên hiển thị</label>
+      <input id="m-uname" value="${d.name || ''}" placeholder="Tên">
+      <label>Mật khẩu ${editData ? '(để trống = giữ nguyên)' : ''}</label>
+      <input id="m-upass" type="password" placeholder="••••••">
+      <label>Trạng thái</label>
+      <select id="m-ustatus">
+        <option value="approved" ${d.status === 'approved' ? 'selected' : ''}>Active</option>
+        <option value="pending" ${d.status === 'pending' ? 'selected' : ''}>Pending</option>
+      </select>
+      <div class="modal-btns">
+        <button class="btn btn-logout" onclick="closeModal()">Hủy</button>
+        <button class="btn-add" onclick="saveAccount('${d.user || ''}')">Lưu</button>
+      </div>
+    `;
+  }
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
+// ====== CRUD ======
+async function saveLicense(oldDid) {
+  const did = document.getElementById('m-did').value.trim();
+  if (!did) return toast('Nhập Device ID!', false);
+  const entry = {
+    name: document.getElementById('m-name').value.trim(),
+    max: parseInt(document.getElementById('m-max').value) || 999,
+  };
+  const exp = document.getElementById('m-exp').value;
+  if (exp) entry.expires = exp;
+  if (oldDid && oldDid !== did) delete DATA.licenses[oldDid];
+  if (!DATA.licenses) DATA.licenses = {};
+  DATA.licenses[did] = entry;
+  if (await saveData()) { toast('✅ Đã lưu!'); renderAll(); closeModal(); }
+  else toast('❌ Lỗi lưu!', false);
+}
+
+async function delLicense(did) {
+  if (!confirm(`Xóa license ${did}?`)) return;
+  delete DATA.licenses[did];
+  if (await saveData()) { toast('✅ Đã xóa!'); renderAll(); }
+}
+
+function editLicense(did) {
+  const info = DATA.licenses[did] || {};
+  showModal('license', { did, ...info });
+}
+
+async function saveAccount(oldUser) {
+  const user = document.getElementById('m-user').value.trim().toLowerCase();
+  if (!user) return toast('Nhập username!', false);
+  const pass = document.getElementById('m-upass').value.trim();
+  if (!DATA.accounts) DATA.accounts = {};
+  const existing = DATA.accounts[oldUser || user] || {};
+  const entry = {
+    ...existing,
+    name: document.getElementById('m-uname').value.trim(),
+    status: document.getElementById('m-ustatus').value,
+    created: existing.created || new Date().toISOString().split('T')[0],
+    devices: existing.devices || [],
+  };
+  if (pass) {
+    entry.pass = await sha256(pass + '_fp_salt_' + user);
+  }
+  if (oldUser && oldUser !== user) delete DATA.accounts[oldUser];
+  DATA.accounts[user] = entry;
+  if (await saveData()) { toast('✅ Đã lưu!'); renderAll(); closeModal(); }
+  else toast('❌ Lỗi lưu!', false);
+}
+
+async function delAccount(user) {
+  if (!confirm(`Xóa tài khoản ${user}?`)) return;
+  delete DATA.accounts[user];
+  if (await saveData()) { toast('✅ Đã xóa!'); renderAll(); }
+}
+
+function editAccount(user) {
+  const info = DATA.accounts[user] || {};
+  showModal('account', { user, ...info });
+}
+
+// ====== TOAST ======
+function toast(msg, success = true) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.style.borderColor = success ? '#00f5a0' : '#ef4444';
+  t.style.color = success ? '#00f5a0' : '#ef4444';
+  t.textContent = msg;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+</script>
+</body>
+</html>

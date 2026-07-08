@@ -644,7 +644,7 @@ input::placeholder { color: #444; }
 
     <h1>Flowborn Poster Tool</h1>
 
-    <p>Tß╗▒ động tß║ío poster Flowborn cho Liên Qu├ón Mobile</p>
+    <p>Tự động tạo poster Flowborn cho Liên Quốn Mobile</p>
 
   </div>
 
@@ -656,7 +656,7 @@ input::placeholder { color: #444; }
 
     <div id="nav-guest">
 
-      <button class="btn-sm btn-login" onclick="showAuth('login')">Đăng nhß║¡p</button>
+      <button class="btn-sm btn-login" onclick="showAuth('login')">Đăng nhập</button>
 
       <button class="btn-sm btn-register" onclick="showAuth('register')">Đăng ký</button>
 
@@ -688,7 +688,7 @@ input::placeholder { color: #444; }
 
       <div class="auth-tabs">
 
-        <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Đăng nhß║¡p</div>
+        <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Đăng nhập</div>
 
         <div class="auth-tab" id="tab-register" onclick="switchTab('register')">Đăng ký</div>
 
@@ -702,9 +702,9 @@ input::placeholder { color: #444; }
 
         <div class="form-group">
 
-          <label>T├¬n đ─âng nhß║¡p</label>
+          <label>Tên đăng nhập</label>
 
-          <input id="login-user" placeholder="Nhß║¡p t├¬n đ─âng nhß║¡p">
+          <input id="login-user" placeholder="Nhập tên đăng nhập">
 
         </div>
 
@@ -716,7 +716,7 @@ input::placeholder { color: #444; }
 
         </div>
 
-        <button class="btn-big" onclick="doLogin()">Đăng nhß║¡p</button>
+        <button class="btn-big" onclick="doLogin()">Đăng nhập</button>
 
       </div>
 
@@ -728,9 +728,9 @@ input::placeholder { color: #444; }
 
         <div class="form-group">
 
-          <label>T├¬n đ─âng nhß║¡p</label>
+          <label>Tên đăng nhập</label>
 
-          <input id="reg-user" placeholder="├ìt nhß║Ñt 3 ký tự">
+          <input id="reg-user" placeholder="Ít nhất 3 ký tự">
 
         </div>
 
@@ -738,7 +738,7 @@ input::placeholder { color: #444; }
 
           <label>Mật khẩu</label>
 
-          <input id="reg-pass" type="password" placeholder="├ìt nhß║Ñt 4 ký tự">
+          <input id="reg-pass" type="password" placeholder="Ít nhất 4 ký tự">
 
         </div>
 
@@ -758,7 +758,7 @@ input::placeholder { color: #444; }
 
         </div>
 
-        <button class="btn-big" onclick="doRegister()">Tß║ío tài khoản</button>
+        <button class="btn-big" onclick="doRegister()">Tạo tài khoản</button>
 
       </div>
 
@@ -794,7 +794,7 @@ input::placeholder { color: #444; }
 
       <h2>📋 License của tôi</h2>
 
-      <p class="sub">C├íc thiß║┐t bị đã k├¡ch hoạt</p>
+      <p class="sub">Các thiết bị đã kích hoạt</p>
 
       <div id="my-licenses"><div class="empty-lic">Chưa có license nào</div></div>
 
@@ -808,7 +808,7 @@ input::placeholder { color: #444; }
 
       <h2>🔐 Kích hoạt License mới</h2>
 
-      <p class="sub">Chß╗ìn gói v├á nhß║¡p Device ID</p>
+      <p class="sub">Chọn gói và nhập Device ID</p>
 
 
 
@@ -816,19 +816,19 @@ input::placeholder { color: #444; }
 
         <div class="plan" data-plan="trial" onclick="selectPlan(this)">
 
-          <div class="name">D├╣ng thử</div>
+          <div class="name">Dùng thử</div>
 
           <div class="price">FREE</div>
 
-          <div class="price-sub">Miß╗àn phí</div>
+          <div class="price-sub">Miễn phí</div>
 
           <ul class="features">
 
-            <li>3 lượt sß╗¡ dụng</li>
+            <li>3 lượt sử dụng</li>
 
             <li>Hết hạn sau 1 ngày</li>
 
-            <li>─Éß║ºy đß╗º t├¡nh n─âng</li>
+            <li>Đầy đủ tính năng</li>
 
           </ul>
 
@@ -846,7 +846,7 @@ input::placeholder { color: #444; }
 
           <ul class="features">
 
-            <li>999 lượt sß╗¡ dụng</li>
+            <li>999 lượt sử dụng</li>
 
             <li>Hết hạn sau 7 ngày</li>
 
@@ -868,7 +868,7 @@ input::placeholder { color: #444; }
 
           <ul class="features">
 
-            <li>Kh├┤ng giß╗¢i hạn lượt</li>
+            <li>Không giới hạn lượt</li>
 
             <li>Hết hạn sau 30 ngày</li>
 
@@ -904,11 +904,11 @@ input::placeholder { color: #444; }
 
         <div class="form-group">
 
-          <label>T├ái khoản</label>
+          <label>Tài khoản</label>
 
           <input id="acc-username" readonly style="color:#00f5a0; background:#0a0a0f">
 
-          <p class="hint">Kích hoạt trên tài khoản đang đ─âng nhß║¡p (dùng cho Cloud Shell)</p>
+          <p class="hint">Kích hoạt trên tài khoản đang đăng nhập (dùng cho Cloud Shell)</p>
 
         </div>
 
@@ -920,11 +920,11 @@ input::placeholder { color: #444; }
 
         <div class="form-group">
 
-          <label>M├ú thiß║┐t bị (Device ID)</label>
+          <label>Mã thiết bị (Device ID)</label>
 
           <input id="device-id" placeholder="Ví dụ: 10296e04cf07b97f" maxlength="16">
 
-          <p class="hint">Lß║Ñy bß║▒ng: <code>python3 flowborn_poster.py --device-id</code> (dùng cho Termux/iSH)</p>
+          <p class="hint">Lấy bằng: <code>python3 flowborn_poster.py --device-id</code> (dùng cho Termux/iSH)</p>
 
         </div>
 
@@ -1006,7 +1006,7 @@ input::placeholder { color: #444; }
 
             <span class="shell-num">1</span>
 
-            <span>Nhß║Ñn nút b├¬n d╞░ß╗¢i để mß╗ƒ Cloud Shell</span>
+            <span>Nhấn nút bên dưới để mở Cloud Shell</span>
 
           </div>
 
@@ -1022,7 +1022,7 @@ input::placeholder { color: #444; }
 
             <span class="shell-num">3</span>
 
-            <span>G├╡ <code>sh r</code> để chß║íy tool</span>
+            <span>Gõ <code>sh r</code> để chạy tool</span>
 
           </div>
 
@@ -1048,7 +1048,7 @@ input::placeholder { color: #444; }
 
         <p class="hint" style="text-align:center; margin-top:8px">
 
-          Cloud Shell: nhanh h╞ín (cần Gmail) ┬╖ Binder: không cần tài khoản (chß║¡m h╞ín lß║ºn đầu)
+          Cloud Shell: nhanh hơn (cần Gmail) ┬╖ Binder: không cần tài khoản (chậm hơn lần đầu)
 
         </p>
 
@@ -1266,7 +1266,7 @@ async function doLogin() {
 
   const pass = document.getElementById('login-pass').value;
 
-  if (!user || !pass) return toast('Nhß║¡p đß║ºy đß╗º th├┤ng tin!', false);
+  if (!user || !pass) return toast('Nhập đß║ºy đủ thông tin!', false);
 
 
 
@@ -1276,7 +1276,7 @@ async function doLogin() {
 
     const acc = DATA.accounts[user];
 
-    if (!acc) return showAuthError('T├ái khoản không tß╗ôn tß║íi!');
+    if (!acc) return showAuthError('Tài khoản không tồn tại!');
 
 
 
@@ -1294,7 +1294,7 @@ async function doLogin() {
 
     onLoggedIn();
 
-    toast('Đăng nhß║¡p th├ánh c├┤ng!');
+    toast('Đăng nhập thành công!');
 
   } catch (e) {
 
@@ -1316,9 +1316,9 @@ async function doRegister() {
 
   r.className = 'result success';
 
-  r.innerHTML = `<div class="icon">📋</div><h3>Đăng ký tài khoản</h3><p>Liên hệ <strong>beterHa90</strong> (Zalo/Facebook/Telegram) để được tß║ío tài khoản.<br><br>Gß╗¡i k├¿m:<br>ΓÇó T├¬n đ─âng nhß║¡p mong muß╗æn<br>ΓÇó G├│i muß╗æn mua (Tuần 30K / Tháng 80K)</p>`;
+  r.innerHTML = `<div class="icon">📋</div><h3>Đăng ký tài khoản</h3><p>Liên hệ <strong>beterHa90</strong> (Zalo/Facebook/Telegram) để được tạo tài khoản.<br><br>Gß╗¡i k├¿m:<br>• Tên đăng nhập mong muß╗æn<br>• G├│i muß╗æn mua (Tuần 30K / Tháng 80K)</p>`;
 
-  toast('Liên hệ beterHa90 để đ─âng ký!', true);
+  toast('Liên hệ beterHa90 để đăng ký!', true);
 
 }
 
@@ -1370,7 +1370,7 @@ async function onLoggedIn() {
 
   if (acc && acc.status === 'pending') {
 
-    showAuthError('⏳ T├ái khoản đang chờ admin duyệt!\nLiên hệ beterHa90 để được duyệt.');
+    showAuthError('⏳ Tài khoản đang chờ admin duyệt!\nLiên hệ beterHa90 để được duyệt.');
 
     currentUser = null;
 
@@ -1430,7 +1430,7 @@ function renderAccountStatus() {
 
   const hasLic = !!wl;
 
-  let licMax = '-', licExp = '-', licStatus = 'Ch╞░a k├¡ch hoạt';
+  let licMax = '-', licExp = '-', licStatus = 'Chưa kích hoạt';
 
   if (wl) {
 
@@ -1488,7 +1488,7 @@ function renderAccountStatus() {
 
         <div class="val" style="font-size:14px;color:${hasLic ? '#00d9f5' : '#666'}">${licExp}</div>
 
-        <div class="lbl">Hß║ín sß╗¡ dụng</div>
+        <div class="lbl">Hạn sử dụng</div>
 
       </div>
 
@@ -1514,7 +1514,7 @@ function renderMyLicenses() {
 
   if (!devices.length) {
 
-    container.innerHTML = '<div class="empty-lic">Ch╞░a c├│ license n├áo. Kích hoạt b├¬n d╞░ß╗¢i!</div>';
+    container.innerHTML = '<div class="empty-lic">Chưa có license nào. Kích hoạt bên dưới!</div>';
 
     return;
 
@@ -1556,7 +1556,7 @@ function renderMyLicenses() {
 
         <div class="did">${did}</div>
 
-        <div class="info">${max} lượt ┬╖ Hß║ín: ${exp}</div>
+        <div class="info">${max} lượt ┬╖ Hạn: ${exp}</div>
 
       </div>
 
@@ -1616,7 +1616,7 @@ async function activate() {
 
   if (isAccount) {
 
-    if (!currentUser) return toast('Đăng nhß║¡p tr╞░ß╗¢c!', false);
+    if (!currentUser) return toast('Đăng nhập trước!', false);
 
     key = currentUser;
 
@@ -1656,7 +1656,7 @@ async function activate() {
 
         showActivateResult('error', '🚫', 'Đã hết lượt dùng thử!',
 
-          'Mß╗ùi tài khoản/thiß║┐t bị chß╗ë được dùng thử 1 lß║ºn.<br>Liên hệ <strong>beterHa90</strong> để mua gói Tuần/Tháng.', key, null, isAccount);
+          'Mỗi tài khoản/thiết bị chỉ được dùng thử 1 lần.<br>Liên hệ <strong>beterHa90</strong> để mua gói Tuần/Tháng.', key, null, isAccount);
 
         btn.disabled = false; btn.textContent = origText;
 
@@ -1688,17 +1688,17 @@ async function activate() {
 
         showActivateResult('error', '⏰', 'License đã hết hạn!',
 
-          'Liên hệ <strong>beterHa90</strong> để gia hạn hoß║╖c mua gói mới.', key, lic, isAccount);
+          'Liên hệ <strong>beterHa90</strong> để gia hạn hoặc mua gói mới.', key, lic, isAccount);
 
       } else if (isPending) {
 
         showActivateResult('error', '⏳', 'Chờ thanh toán!',
 
-          'Liên hệ <strong>beterHa90</strong> để ho├án tß║Ñt thanh toán.', key, lic, isAccount);
+          'Liên hệ <strong>beterHa90</strong> để hoàn tất thanh toán.', key, lic, isAccount);
 
       } else {
 
-        showActivateResult('success', '✅', isAccount ? 'T├ái khoản đang hoạt động!' : 'Thiết bị đang hoạt động!',
+        showActivateResult('success', '✅', isAccount ? 'Tài khoản đang hoạt động!' : 'Thiết bị đang hoạt động!',
 
           'License hợp lệ.', key, lic, isAccount);
 
@@ -1710,7 +1710,7 @@ async function activate() {
 
       showActivateResult('error', '🔒', 'Chưa có license!',
 
-        'Liên hệ <strong>beterHa90</strong> (Zalo/Facebook/Telegram) để mua gói:<br><br>ΓÇó G├│i Tuần: <strong>30K</strong> (999 lượt, 7 ngày)<br>ΓÇó G├│i Tháng: <strong>80K</strong> (Kh├┤ng giß╗¢i hạn, 30 ngày)', key, null, isAccount);
+        'Liên hệ <strong>beterHa90</strong> (Zalo/Facebook/Telegram) để mua gói:<br><br>• G├│i Tuần: <strong>30K</strong> (999 lượt, 7 ngày)<br>• G├│i Tháng: <strong>80K</strong> (Không giới hạn, 30 ngày)', key, null, isAccount);
 
     }
 
@@ -1720,7 +1720,7 @@ async function activate() {
 
   } catch (e) {
 
-    showActivateResult('error', '❌', 'Lß╗ùi', e.message, '', null, false);
+    showActivateResult('error', '❌', 'Lỗi', e.message, '', null, false);
 
     toast(e.message, false);
 
@@ -1748,13 +1748,13 @@ function showActivateResult(type, icon, title, desc, key, lic, isAccount) {
 
   if (lic) {
 
-    const label = isAccount ? 'T├ái khoản' : 'Device ID';
+    const label = isAccount ? 'Tài khoản' : 'Device ID';
 
     info = `<div class="key-info">
 
       <div class="row"><span class="label">${label}</span><span class="value">${key}</span></div>
 
-      <div class="row"><span class="label">Sß╗æ lượt</span><span class="value">${lic.max || '?'}</span></div>
+      <div class="row"><span class="label">Số lượt</span><span class="value">${lic.max || '?'}</span></div>
 
       <div class="row"><span class="label">Hết hạn</span><span class="value">${lic.expires || '-'}</span></div>
 
@@ -1848,9 +1848,9 @@ function openBinder() {
 
   document.getElementById('binder-iframe').src = BINDER_URL;
 
-  document.getElementById('shell-status').textContent = '⏳ ─Éang khß╗ƒi tß║ío (30-60 gi├óy)...';
+  document.getElementById('shell-status').textContent = '⏳ Đang khởi tạo (30-60 giây)...';
 
-  toast('Terminal đang khß╗ƒi tß║ío...');
+  toast('Terminal đang khởi tạo...');
 
   
 

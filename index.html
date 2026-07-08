@@ -98,17 +98,17 @@ input::placeholder { color: #444; }
 <body>
 <div class="container">
   <div class="header">
-    <h1>ΓÜí Flowborn License Manager</h1>
-    <p>Quan ly license & tai khoan</p>
+    <h1>🛡️ Flowborn License Manager</h1>
+    <p>Quản lý license & tài khoản</p>
   </div>
 
   <!-- Login -->
   <div id="login-section">
-    <h2>≡ƒöæ Dang nhap</h2>
-    <p>Can GitHub token co quyen <b>gist</b>.<br>
-    <a href="https://github.com/settings/tokens/new" target="_blank">Tao token tai day ΓåÆ</a></p>
+    <h2>🔐 Đăng nhập</h2>
+    <p>Cần GitHub token có quyền <b>gist</b>.<br>
+    <a href="https://github.com/settings/tokens/new" target="_blank">Tạo token tại đây →</a></p>
     <input type="password" id="token-input" placeholder="ghp_xxxxx...">
-    <button class="btn btn-primary" onclick="doLogin()">Dang nhap</button>
+    <button class="btn btn-primary" onclick="doLogin()">Đăng nhập</button>
   </div>
 
   <!-- Dashboard -->
@@ -122,38 +122,38 @@ input::placeholder { color: #444; }
 
     <!-- Tabs -->
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('licenses')">≡ƒöæ License / Device</div>
-      <div class="tab" onclick="switchTab('accounts')">≡ƒæñ Tai khoan</div>
+      <div class="tab active" onclick="switchTab('licenses')">🔐 License / Device</div>
+      <div class="tab" onclick="switchTab('accounts')">👤 Tài khoản</div>
     </div>
 
     <!-- TAB: Licenses -->
     <div class="tab-content active" id="tab-licenses">
       <div class="actions">
-        <button class="btn btn-add" onclick="showModal('add')">+ Them license</button>
-        <button class="btn btn-free" onclick="showModal('free')">≡ƒÄü Free key</button>
-        <button class="btn btn-logout" onclick="doLogout()" style="margin-left:auto">Dang xuat</button>
+        <button class="btn btn-add" onclick="showModal('add')">+ Thêm license</button>
+        <button class="btn btn-free" onclick="showModal('free')">🎁 Free key</button>
+        <button class="btn btn-logout" onclick="doLogout()" style="margin-left:auto">Đăng xuất</button>
       </div>
       <div class="tbl">
         <table>
-          <thead><tr><th>Device ID</th><th>Luot</th><th>Het han</th><th>Trang thai</th><th></th></tr></thead>
+          <thead><tr><th>Device ID</th><th>Lượt</th><th>Hết hạn</th><th>Trạng thái</th><th></th></tr></thead>
           <tbody id="lic-body"></tbody>
         </table>
-        <div class="empty" id="lic-empty" style="display:none">Chua co license</div>
+        <div class="empty" id="lic-empty" style="display:none">Chưa có license</div>
       </div>
     </div>
 
     <!-- TAB: Accounts -->
     <div class="tab-content" id="tab-accounts">
       <div class="actions">
-        <button class="btn btn-add" onclick="showModal('add-acc')">+ Them tai khoan</button>
-        <button class="btn btn-logout" onclick="doLogout()" style="margin-left:auto">Dang xuat</button>
+        <button class="btn btn-add" onclick="showModal('add-acc')">+ Thêm tài khoản</button>
+        <button class="btn btn-logout" onclick="doLogout()" style="margin-left:auto">Đăng xuất</button>
       </div>
       <div class="tbl">
         <table>
-          <thead><tr><th>Username</th><th>Ten</th><th>Ngay tao</th><th>Trang thai</th><th></th></tr></thead>
+          <thead><tr><th>Username</th><th>Tên</th><th>Ngày tạo</th><th>Trạng thái</th><th></th></tr></thead>
           <tbody id="acc-body"></tbody>
         </table>
-        <div class="empty" id="acc-empty" style="display:none">Chua co tai khoan</div>
+        <div class="empty" id="acc-empty" style="display:none">Chưa có tài khoản</div>
       </div>
     </div>
   </div>
@@ -162,14 +162,14 @@ input::placeholder { color: #444; }
 <!-- Add License Modal -->
 <div class="modal-overlay" id="modal-add">
   <div class="modal">
-    <h3>Them License</h3>
+    <h3>Thêm License</h3>
     <div class="form-group"><label>Device ID</label><input id="add-did" placeholder="Paste device ID"></div>
-    <div class="form-group"><label>So luot</label><input id="add-max" type="number" value="999" min="1"></div>
-    <div class="form-group"><label>Het han</label><input id="add-exp" type="date"></div>
-    <div class="form-group"><label>Ghi chu</label><input id="add-name" placeholder="Ten khach hang"></div>
+    <div class="form-group"><label>Số lượt</label><input id="add-max" type="number" value="999" min="1"></div>
+    <div class="form-group"><label>Hết hạn</label><input id="add-exp" type="date"></div>
+    <div class="form-group"><label>Ghi chú</label><input id="add-name" placeholder="Tên khách hàng"></div>
     <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeModals()">Huy</button>
-      <button class="btn btn-primary" onclick="addLicense()" style="margin-top:0">Them</button>
+      <button class="btn btn-cancel" onclick="closeModals()">Hủy</button>
+      <button class="btn btn-primary" onclick="addLicense()" style="margin-top:0">Thêm</button>
     </div>
   </div>
 </div>
@@ -178,13 +178,13 @@ input::placeholder { color: #444; }
 <div class="modal-overlay" id="modal-free">
   <div class="modal">
     <h3>⭐ Free Key (tat ca)</h3>
-    <div class="form-group"><label>So luot / thiet bi</label><input id="free-max" type="number" value="999" min="1"></div>
-    <div class="form-group"><label>Gioi han thiet bi</label><input id="free-devices" type="number" value="10" min="1"></div>
-    <div class="form-group"><label>Het han</label><input id="free-exp" type="date"></div>
-    <div class="form-group"><label>Ghi chu</label><input id="free-name" value="FREE trial"></div>
+    <div class="form-group"><label>So lượt / thiet bi</label><input id="free-max" type="number" value="999" min="1"></div>
+    <div class="form-group"><label>Giới hạn thiết bị</label><input id="free-devices" type="number" value="10" min="1"></div>
+    <div class="form-group"><label>Hết hạn</label><input id="free-exp" type="date"></div>
+    <div class="form-group"><label>Ghi chú</label><input id="free-name" value="FREE trial"></div>
     <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeModals()">Huy</button>
-      <button class="btn btn-primary" onclick="addFreeKey()" style="margin-top:0">Luu</button>
+      <button class="btn btn-cancel" onclick="closeModals()">Hủy</button>
+      <button class="btn btn-primary" onclick="addFreeKey()" style="margin-top:0">Lưu</button>
     </div>
   </div>
 </div>
@@ -192,20 +192,20 @@ input::placeholder { color: #444; }
 <!-- Edit/Renew License Modal -->
 <div class="modal-overlay" id="modal-edit">
   <div class="modal">
-    <h3 id="edit-title">✏️ Sua / Gia han</h3>
+    <h3 id="edit-title">✏️ Sửa / Gia han</h3>
     <div class="form-group"><label>Device ID / Username</label><input id="edit-did" readonly style="color:#00d9f5"></div>
-    <div class="form-group"><label>So luot / thiet bi</label><input id="edit-max" type="number" min="1"></div>
-    <div class="form-group" id="edit-devices-group" style="display:none"><label>Gioi han thiet bi</label><input id="edit-devices" type="number" min="1"></div>
-    <div class="form-group"><label>Het han</label><input id="edit-exp" type="date"></div>
-    <div class="form-group"><label>Ghi chu</label><input id="edit-name"></div>
+    <div class="form-group"><label>So lượt / thiet bi</label><input id="edit-max" type="number" min="1"></div>
+    <div class="form-group" id="edit-devices-group" style="display:none"><label>Giới hạn thiết bị</label><input id="edit-devices" type="number" min="1"></div>
+    <div class="form-group"><label>Hết hạn</label><input id="edit-exp" type="date"></div>
+    <div class="form-group"><label>Ghi chú</label><input id="edit-name"></div>
     <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
       <button class="btn btn-free" onclick="quickExtend(7)">+7 ngay</button>
       <button class="btn btn-free" onclick="quickExtend(30)">+30 ngay</button>
       <button class="btn btn-free" onclick="quickExtend(90)">+90 ngay</button>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeModals()">Huy</button>
-      <button class="btn btn-primary" onclick="saveEdit()" style="margin-top:0">Luu</button>
+      <button class="btn btn-cancel" onclick="closeModals()">Hủy</button>
+      <button class="btn btn-primary" onclick="saveEdit()" style="margin-top:0">Lưu</button>
     </div>
   </div>
 </div>
@@ -213,13 +213,13 @@ input::placeholder { color: #444; }
 <!-- Add Account Modal -->
 <div class="modal-overlay" id="modal-add-acc">
   <div class="modal">
-    <h3>Them tai khoan</h3>
+    <h3>Thêm tài khoản</h3>
     <div class="form-group"><label>Username</label><input id="acc-user" placeholder="username"></div>
     <div class="form-group"><label>Mat khau</label><input id="acc-pass" type="password" placeholder="Mat khau"></div>
     <div class="form-group"><label>Ten hien thi</label><input id="acc-name" placeholder="Ten"></div>
     <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeModals()">Huy</button>
-      <button class="btn btn-primary" onclick="addAccount()" style="margin-top:0">Them</button>
+      <button class="btn btn-cancel" onclick="closeModals()">Hủy</button>
+      <button class="btn btn-primary" onclick="addAccount()" style="margin-top:0">Thêm</button>
     </div>
   </div>
 </div>
@@ -262,7 +262,7 @@ function getStatus(info) {
   const exp = typeof info === 'object' ? info.expires : '';
   const name = typeof info === 'object' ? (info.name || '') : '';
   if (name.includes('[CHO THANH TOAN]')) return { text: 'Cho TT', cls: 'tag-pending' };
-  if (exp && new Date() > new Date(exp + 'T23:59:59')) return { text: 'Het han', cls: 'tag-expired' };
+  if (exp && new Date() > new Date(exp + 'T23:59:59')) return { text: 'Hết hạn', cls: 'tag-expired' };
   return { text: 'Active', cls: 'tag-active' };
 }
 
@@ -282,14 +282,14 @@ function renderStats() {
   document.getElementById('s-act').textContent = active;
   document.getElementById('s-acc').textContent = Object.keys(accs).length;
   const freeKey = lics['*'];
-  let freeText = 'Khong';
+  let freeText = 'Không';
   let freeDetail = '';
   if (freeKey) {
-    freeText = 'Co';
+    freeText = 'Có';
     const fu = DATA.free_users || [];
     const devCount = new Set(fu.map(e => e.split('|')[0])).size;
     const maxDev = DATA.max_devices || 999;
-    freeDetail = `🔄 ${freeKey.max || '?'} luot | 📱 ${devCount}/${maxDev} TB`;
+    freeDetail = `🔄 ${freeKey.max || '?'} lượt | 📱 ${devCount}/${maxDev} TB`;
   }
   document.getElementById('s-free').textContent = freeText;
   document.getElementById('s-free-detail').innerHTML = freeDetail;
@@ -316,15 +316,15 @@ function renderLicenses() {
       const fu = DATA.free_users || [];
       const devCount = new Set(fu.map(e => e.split('|')[0])).size;
       const maxDev = DATA.max_devices || 999;
-      maxLabel = `${max} luot<br><small style="color:#00d9f5">📱 ${devCount}/${maxDev} TB</small>`;
+      maxLabel = `${max} lượt<br><small style="color:#00d9f5">📱 ${devCount}/${maxDev} TB</small>`;
     }
     return `<tr>
       <td>${label}<br><small style="color:#555">${name}</small></td>
       <td>${maxLabel}</td><td>${exp}</td>
       <td><span class="tag ${st.cls}">${st.text}</span></td>
       <td>
-        <button class="btn btn-edit" onclick="openEdit('license','${did}')">Sua</button>
-        <button class="btn btn-del" onclick="delLicense('${did}')">Xoa</button>
+        <button class="btn btn-edit" onclick="openEdit('license','${did}')">Sửa</button>
+        <button class="btn btn-del" onclick="delLicense('${did}')">Xóa</button>
       </td>
     </tr>`;
   }).join('');
@@ -357,8 +357,8 @@ function renderAccounts() {
       <td>${statusTag}</td>
       <td>
         ${approveBtn}
-        <button class="btn btn-edit" onclick="openEditAcc('${user}')">Sua</button>
-        <button class="btn btn-del" onclick="delAccount('${user}')">Xoa</button>
+        <button class="btn btn-edit" onclick="openEditAcc('${user}')">Sửa</button>
+        <button class="btn btn-del" onclick="delAccount('${user}')">Xóa</button>
       </td>
     </tr>`;
   }).join('');
@@ -397,7 +397,7 @@ async function addLicense() {
   if (exp) entry.expires = exp;
   if (name) entry.name = name;
   DATA.licenses[did] = entry;
-  if (await saveData()) { toast('Da them!'); render(); closeModals(); document.getElementById('add-did').value = ''; }
+  if (await saveData()) { toast('Đã thêm!'); render(); closeModals(); document.getElementById('add-did').value = ''; }
   else toast('Loi!', false);
 }
 
@@ -415,16 +415,16 @@ async function addFreeKey() {
 }
 
 async function delLicense(did) {
-  if (!confirm(`Xoa license "${did}"?`)) return;
+  if (!confirm(`Xóa license "${did}"?`)) return;
   delete DATA.licenses[did];
-  if (await saveData()) { toast('Da xoa!'); render(); } else toast('Loi!', false);
+  if (await saveData()) { toast('Đã xóa!'); render(); } else toast('Loi!', false);
 }
 
 // === EDIT / RENEW ===
 function openEdit(type, key) {
   editTarget = { type, key };
   const info = DATA.licenses[key] || {};
-  document.getElementById('edit-title').textContent = '✏️ Sua / Gia han License';
+  document.getElementById('edit-title').textContent = '✏️ Sửa / Gia han License';
   document.getElementById('edit-did').value = key;
   document.getElementById('edit-max').value = info.max || 999;
   document.getElementById('edit-exp').value = info.expires || '';
@@ -450,7 +450,7 @@ function openEditAcc(user) {
   const wl = (DATA.web_licenses || {})[user];
   if (wl && !lic) { lic = wl; editTarget.deviceKey = 'web:' + user; }
 
-  document.getElementById('edit-title').textContent = 'Γ£Å∩╕Å Sua / Gia han TK: ' + user;
+  document.getElementById('edit-title').textContent = 'Γ£Å∩╕Å Sửa / Gia han TK: ' + user;
   document.getElementById('edit-did').value = user;
   document.getElementById('edit-max').value = lic ? (lic.max || 0) : 0;
   document.getElementById('edit-exp').value = lic ? (lic.expires || '') : '';
@@ -503,7 +503,7 @@ async function saveEdit() {
     }
   }
 
-  if (await saveData()) { toast('Da luu!'); render(); closeModals(); }
+  if (await saveData()) { toast('Đã lưu!'); render(); closeModals(); }
   else toast('Loi!', false);
 }
 
@@ -520,7 +520,7 @@ async function addAccount() {
 
   DATA.accounts[user] = { pass: hash, name: name || user, devices: [], created: new Date().toISOString().split('T')[0] };
   if (await saveData()) {
-    toast('Da them TK!'); render(); closeModals();
+    toast('Đã thêm TK!'); render(); closeModals();
     document.getElementById('acc-user').value = '';
     document.getElementById('acc-pass').value = '';
     document.getElementById('acc-name').value = '';
@@ -528,10 +528,10 @@ async function addAccount() {
 }
 
 async function delAccount(user) {
-  if (!confirm(`Xoa tai khoan "${user}" va tat ca device?`)) return;
+  if (!confirm(`Xóa tai khoan "${user}" va tat ca device?`)) return;
   delete DATA.accounts[user];
   if (DATA.web_licenses) delete DATA.web_licenses[user];
-  if (await saveData()) { toast('Da xoa!'); render(); } else toast('Loi!', false);
+  if (await saveData()) { toast('Đã xóa!'); render(); } else toast('Loi!', false);
 }
 
 async function approveAcc(user) {

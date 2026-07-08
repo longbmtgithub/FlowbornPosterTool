@@ -28,9 +28,6 @@ proxy/
 sample/
 .replit
 replit.nix
-r
-requirements.txt
-web_login.py
 setup_cloud.sh
 
 # Obfuscator tools

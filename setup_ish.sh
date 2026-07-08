@@ -12,15 +12,15 @@ echo "╚═══════════════════════�
 echo ""
 
 # iSH dung Alpine Linux (apk)
-echo ">>> Cap nhat package..."
+echo ">>>  Cap nhat package..."
 apk update 2>/dev/null
 
 # Install Python3 + packages (pre-compiled, KHONG can build)
-echo ">>> Cai dat Python3 + packages..."
+echo ">>>  Cai dat Python3 + packages..."
 apk add python3 py3-pip py3-pillow py3-requests 2>/dev/null
 
 # Install js2py for Python sign bridge (khong can Node.js!)
-echo ">>> Cai dat js2py (Python sign bridge)..."
+echo ">>>  Cai dat js2py (Python sign bridge)..."
 pip3 install --break-system-packages js2py 2>/dev/null || pip3 install js2py 2>/dev/null
 
 if command -v python3 >/dev/null 2>&1; then
@@ -31,21 +31,28 @@ else
 fi
 
 # Install Node.js
-echo ">>> Cai dat Node.js..."
+echo ">>>  Cai dat Node.js..."
 apk add nodejs 2>/dev/null
 if command -v node >/dev/null 2>&1; then
     echo "[OK] Node.js: $(node --version)"
 else
-    echo "[FAIL] Cai dat Node.js that bai!"
-    exit 1
+    echo "[!] Node.js khong cai duoc (khong bat buoc, co Python sign bridge)"
 fi
 
 # Kiem tra requests co chua (neu apk khong co thi pip)
 python3 -c "import requests" 2>/dev/null
 if [ $? -ne 0 ]; then
-    echo ">>> Cai requests qua pip..."
+    echo ">>>  Cai requests qua pip..."
     pip3 install --break-system-packages requests 2>/dev/null || pip3 install requests 2>/dev/null
 fi
+
+# Kiem tra Pillow
+python3 -c "from PIL import Image" 2>/dev/null
+if [ $? -ne 0 ]; then
+    echo ">>>  Cai Pillow qua pip..."
+    pip3 install --break-system-packages Pillow 2>/dev/null || pip3 install Pillow 2>/dev/null
+fi
+
 echo "[OK] Python packages"
 
 # Create symlink python -> python3
@@ -56,9 +63,9 @@ fi
 
 # Check files
 echo ""
-echo ">>> Kiem tra files..."
+echo ">>>  Kiem tra files..."
 FILES_OK=true
-for f in "flowborn_poster.py" "sign_bridge.js" "camp-security-oversea.0.1.0.js"; do
+for f in "flowborn_poster.py" "loadtran.py" "sign_bridge.js" "camp-security-oversea.0.1.0.js"; do
     if [ -f "$f" ]; then
         echo "[OK] $f"
     else
@@ -73,22 +80,28 @@ echo "════════════════════════�
 if [ "$FILES_OK" = true ]; then
     echo "[OK] Setup hoan tat!"
 
-    # Tao lenh tat 'flb'
+    # Tao lenh tat 'flb' va 'lt'
     TOOL_DIR="$(pwd)"
-    echo "#!/bin/sh" > /usr/local/bin/flb
-    echo "cd \"$TOOL_DIR\" && exec python3 flowborn_poster.py \"\$@\"" >> /usr/local/bin/flb
+
+    printf '#!/bin/sh\ncd "%s" && exec python3 flowborn_poster.py "$@"\n' "$TOOL_DIR" > /usr/local/bin/flb
     chmod +x /usr/local/bin/flb
-    echo "[OK] Lenh tat 'flb' da duoc tao!"
+    echo "[OK] Lenh tat 'flb' (Flowborn Poster)"
+
+    printf '#!/bin/sh\ncd "%s" && exec python3 loadtran.py "$@"\n' "$TOOL_DIR" > /usr/local/bin/lt
+    chmod +x /usr/local/bin/lt
+    echo "[OK] Lenh tat 'lt' (Load Tran)"
 
     echo ""
     echo "  CACH SU DUNG:"
     echo "  1. Copy file .har vao thu muc nay"
     echo "  2. Copy anh/video vao thu muc nay"
-    echo "  3. Chay: flb"
+    echo "  3. Chay: flb (Flowborn) hoac lt (Load Tran)"
     echo ""
-    echo "  flb              — Chay tool"
-    echo "  flb --device-id  — Xem ma thiet bi"
-    echo "  flb --test-sign  — Test sign bridge"
+    echo "  Cac lenh:"
+    echo "    flb              — Chay Flowborn Poster"
+    echo "    lt               — Chay Load Tran"
+    echo "    flb --device-id  — Xem ma thiet bi"
+    echo "    flb --test-sign  — Test sign bridge"
 else
     echo "[FAIL] Thieu files! Vui long copy day du files."
 fi

@@ -1,95 +1,110 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/sh
 # ============================================
 #  Flowborn Poster Tool - Setup Script
-#  by hienmods
+#  by hienmods (Termux - Android)
 # ============================================
 
-RED='\033[91m'
-GREEN='\033[92m'
-CYAN='\033[96m'
-YELLOW='\033[93m'
-BOLD='\033[1m'
-RESET='\033[0m'
-
 echo ""
-echo -e "${CYAN}${BOLD}╔══════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}${BOLD}║  Flowborn Poster Tool - Auto Setup       ║${RESET}"
-echo -e "${CYAN}${BOLD}║  by hienmods                             ║${RESET}"
-echo -e "${CYAN}${BOLD}╚══════════════════════════════════════════╝${RESET}"
+echo "╔══════════════════════════════════════════╗"
+echo "║  Flowborn Poster Tool - Auto Setup       ║"
+echo "║  by hienmods                             ║"
+echo "╚══════════════════════════════════════════╝"
 echo ""
 
 # Check Termux
 if [ ! -d "/data/data/com.termux" ]; then
-    echo -e "${YELLOW}⚠  Khong phat hien Termux. Script nay danh cho Termux.${RESET}"
+    echo "[!] Khong phat hien Termux."
+    echo "[!] Neu ban dung iSH (iOS), chay: sh setup_ish.sh"
+    exit 1
 fi
 
 # Update packages
-echo -e "${CYAN}›  Cap nhat package...${RESET}"
+echo ">  Cap nhat package..."
 pkg update -y > /dev/null 2>&1
 
 # Install Python
-echo -e "${CYAN}›  Cai dat Python...${RESET}"
+echo ">  Cai dat Python..."
 pkg install -y python > /dev/null 2>&1
-if command -v python &> /dev/null; then
-    echo -e "${GREEN}✓  Python: $(python --version 2>&1)${RESET}"
+if command -v python > /dev/null 2>&1; then
+    echo "[OK] Python: $(python --version 2>&1)"
 else
-    echo -e "${RED}✗  Cai dat Python that bai!${RESET}"
+    echo "[FAIL] Cai dat Python that bai!"
     exit 1
 fi
 
-# Install Node.js
-echo -e "${CYAN}›  Cai dat Node.js...${RESET}"
+# Install Node.js (for sign bridge)
+echo ">  Cai dat Node.js..."
 pkg install -y nodejs > /dev/null 2>&1
-if command -v node &> /dev/null; then
-    echo -e "${GREEN}✓  Node.js: $(node --version)${RESET}"
+if command -v node > /dev/null 2>&1; then
+    echo "[OK] Node.js: $(node --version)"
 else
-    echo -e "${RED}✗  Cai dat Node.js that bai!${RESET}"
-    exit 1
+    echo "[!] Node.js khong cai duoc (khong bat buoc)"
 fi
 
 # Install Python packages
-echo -e "${CYAN}›  Cai dat requests + Pillow...${RESET}"
-pip install requests Pillow > /dev/null 2>&1
-echo -e "${GREEN}✓  Python packages OK${RESET}"
+echo ">  Cai dat requests..."
+pip install requests > /dev/null 2>&1
+if python -c "import requests" > /dev/null 2>&1; then
+    echo "[OK] requests"
+else
+    echo "[FAIL] Khong cai duoc requests!"
+    exit 1
+fi
+
+echo ">  Cai dat Pillow..."
+pip install Pillow > /dev/null 2>&1
+if python -c "from PIL import Image" > /dev/null 2>&1; then
+    echo "[OK] Pillow"
+else
+    echo "[!] Pillow khong cai duoc. Thu cai bang:"
+    echo "    pkg install libjpeg-turbo libpng"
+    echo "    pip install Pillow"
+fi
 
 # Check files
 echo ""
-echo -e "${CYAN}›  Kiem tra files...${RESET}"
+echo ">  Kiem tra files..."
 FILES_OK=true
-for f in "flowborn_poster.py" "sign_bridge.js" "camp-security-oversea.0.1.0.js"; do
+for f in "flowborn_poster.py" "loadtran.py" "sign_bridge.js" "camp-security-oversea.0.1.0.js"; do
     if [ -f "$f" ]; then
-        echo -e "${GREEN}✓  $f${RESET}"
+        echo "[OK] $f"
     else
-        echo -e "${RED}✗  THIEU: $f${RESET}"
+        echo "[FAIL] THIEU: $f"
         FILES_OK=false
     fi
 done
 
 echo ""
-echo -e "${CYAN}${BOLD}═══════════════════════════════════════════${RESET}"
+echo "═══════════════════════════════════════════"
 
 if [ "$FILES_OK" = true ]; then
-    echo -e "${GREEN}${BOLD}✓  Setup hoan tat!${RESET}"
+    echo "[OK] Setup hoan tat!"
 
-    # Tao lenh tat 'flb'
-    FLB_PATH="$PREFIX/bin/flb"
+    # Tao lenh tat 'flb' va 'lt'
     TOOL_DIR="$(pwd)"
-    echo "#!/data/data/com.termux/files/usr/bin/bash" > "$FLB_PATH"
-    echo "cd \"$TOOL_DIR\" && exec python flowborn_poster.py \"\$@\"" >> "$FLB_PATH"
+    
+    FLB_PATH="$PREFIX/bin/flb"
+    printf '#!/data/data/com.termux/files/usr/bin/sh\ncd "%s" && exec python flowborn_poster.py "$@"\n' "$TOOL_DIR" > "$FLB_PATH"
     chmod +x "$FLB_PATH"
-    echo -e "${GREEN}✓  Lenh tat 'flb' da duoc tao!${RESET}"
+    echo "[OK] Lenh tat 'flb' (Flowborn Poster)"
+
+    LT_PATH="$PREFIX/bin/lt"
+    printf '#!/data/data/com.termux/files/usr/bin/sh\ncd "%s" && exec python loadtran.py "$@"\n' "$TOOL_DIR" > "$LT_PATH"
+    chmod +x "$LT_PATH"
+    echo "[OK] Lenh tat 'lt' (Load Tran)"
 
     echo ""
-    echo -e "${CYAN}  CACH SU DUNG:${RESET}"
-    echo -e "  1. Copy file ${YELLOW}.har${RESET} vao thu muc nay"
-    echo -e "  2. Copy ${YELLOW}anh/video${RESET} vao thu muc nay"
-    echo -e "  3. Chay: ${GREEN}flb${RESET}"
+    echo "  CACH SU DUNG:"
+    echo "  1. Copy file .har vao thu muc nay"
+    echo "  2. Copy anh/video vao thu muc nay"
+    echo "  3. Chay: flb (Flowborn) hoac lt (Load Tran)"
     echo ""
-    echo -e "  ${CYAN}Cac lenh khac:${RESET}"
-    echo -e "    ${GREEN}flb${RESET}              — Chay tool"
-    echo -e "    ${GREEN}flb --device-id${RESET}  — Xem ma thiet bi"
-    echo -e "    ${GREEN}flb --test-sign${RESET}  — Test sign bridge"
+    echo "  Cac lenh:"
+    echo "    flb              — Chay Flowborn Poster"
+    echo "    lt               — Chay Load Tran"
+    echo "    flb --device-id  — Xem ma thiet bi"
+    echo "    flb --test-sign  — Test sign bridge"
 else
-    echo -e "${RED}${BOLD}✗  Thieu files! Vui long copy day du files.${RESET}"
+    echo "[FAIL] Thieu files! Vui long copy day du files."
 fi
 echo ""

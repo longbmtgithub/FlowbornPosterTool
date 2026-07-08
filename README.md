@@ -99,12 +99,13 @@ Có **2 cách** chạy tool trên iOS:
 
 **Bước 3:** Chạy tool:
 ```bash
-# Flowborn
-python flowborn_poster.py
+# Flowborn Poster
+sh r
 
 # Load Tran
-python loadtran.py
+sh r loadtran
 ```
+*(Trên Cloud Shell, tool sử dụng Web Login bằng username/password đăng ký trên web)*
 
 ---
 

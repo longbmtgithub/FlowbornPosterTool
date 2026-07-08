@@ -51,14 +51,25 @@ else
     exit 1
 fi
 
-echo ">  Cai dat Pillow..."
+echo ">  Cai dat Pillow (can thu vien anh)..."
+pkg install -y libjpeg-turbo libpng zlib freetype > /dev/null 2>&1
+LDFLAGS="-L/data/data/com.termux/files/usr/lib" \
+CFLAGS="-I/data/data/com.termux/files/usr/include" \
 pip install Pillow > /dev/null 2>&1
 if python -c "from PIL import Image" > /dev/null 2>&1; then
     echo "[OK] Pillow"
 else
-    echo "[!] Pillow khong cai duoc. Thu cai bang:"
-    echo "    pkg install libjpeg-turbo libpng"
-    echo "    pip install Pillow"
+    # Retry with --no-cache-dir
+    echo ">  Thu lai Pillow (no-cache)..."
+    pip install --no-cache-dir Pillow > /dev/null 2>&1
+    if python -c "from PIL import Image" > /dev/null 2>&1; then
+        echo "[OK] Pillow"
+    else
+        echo "[FAIL] Pillow khong cai duoc!"
+        echo "  Thu chay thu cong:"
+        echo "    pkg install libjpeg-turbo libpng zlib freetype"
+        echo "    pip install --no-cache-dir Pillow"
+    fi
 fi
 
 # Check files

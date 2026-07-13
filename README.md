@@ -218,8 +218,10 @@ FlowbornPosterTool/
 ├── setup_ish.sh                    ← Setup iOS/iSH
 └── README.md                       ← File này
 ```
-
+Share Ld player đã bypass giả lập để anh em làm file flowborn và loadtran
+https://drive.google.com/file/d/1da8vWcLIA-YBbrbGL3cN_w1_D0j9jjDm/view?usp=sharing
 ---
+
 
 ## ⚠️ Lưu ý
 
